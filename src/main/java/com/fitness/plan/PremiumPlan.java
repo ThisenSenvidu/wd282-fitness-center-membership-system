@@ -1,12 +1,12 @@
 package com.fitness.plan;
 
-public class PremiumPlan extends membershipPlan {
+public class PremiumPlan extends MembershipPlan {
 
     private boolean personalTrainer;
     private boolean accessPool;
     private boolean nutritionAdvice;
 
-    public PremiumPlan(String duration, String planID, String planName, String planType, String planVersion, String price, String status, boolean accessPool, boolean nutritionAdvice, boolean personalTrainer) {
+    public PremiumPlan(int duration, String planID, String planName, String planType, String planVersion, double price, String status, boolean accessPool, boolean nutritionAdvice, boolean personalTrainer) {
         super(duration, planID, planName, planType, planVersion, price, status);
         this.accessPool = accessPool;
         this.nutritionAdvice = nutritionAdvice;
