@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Plan – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .card-header { background: linear-gradient(135deg, #0f3460, #1a1a2e);
+                   color: white; border-radius: 12px 12px 0 0 !important; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/plans"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/plans">Plans</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container pb-5"><div class="row justify-content-center"><div class="col-lg-7">
+
+  <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+  <div class="card">
+    <div class="card-header p-3 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Update Membership Plan</h5>
+      <span class="badge bg-light text-dark font-monospace" th:text="${plan.planId}"></span>
+    </div>
+    <div class="card-body p-4">
+      <form th:action="@{/plans/{id}/edit(id=${plan.planId})}" method="post">
+
+        <!-- Plan Type -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Plan Type *</label>
+          <div class="d-flex gap-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="planType"
+                     value="basic" th:checked="${plan.planType == 'basic'}" required>
+              <label class="form-check-label">Basic</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="planType"
+                     value="premium" th:checked="${plan.planType == 'premium'}">
+              <label class="form-check-label">Premium (10% discount)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Plan Name *</label>
+          <input type="text" class="form-control" name="planName"
+                 th:value="${plan.planName}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Base Price (Rs.) *</label>
+          <input type="number" class="form-control" name="price"
+                 th:value="${plan.price}" step="0.01" min="0" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Duration (Months) *</label>
+          <input type="number" class="form-control" name="durationMonths"
+                 th:value="${plan.durationMonths}" min="1" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Description *</label>
+          <textarea class="form-control" name="description" rows="3"
+                    th:text="${plan.description}"></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+          <a href="/plans" class="btn btn-outline-secondary">Cancel</a>
+          <form th:action="@{/plans/{id}/delete(id=${plan.planId})}"
+                method="post" class="ms-auto"
+                onsubmit="return confirm('Delete this plan?');">
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+          </form>
+        </div>
+      </form>
+    </div>
+  </div>
+</div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
