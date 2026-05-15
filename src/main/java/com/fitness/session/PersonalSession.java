@@ -19,20 +19,23 @@ public class PersonalSession extends Session {
         this.poolSession = poolSession;
     }
 
-    public double getFineAmount()              { return fineAmount; }
-    public void setFineAmount(double v)        { this.fineAmount = v; }
+    public double getFineAmount() {
 
-    public boolean isPoolSession()             { return poolSession; }
-    public void setPoolSession(boolean v)      { this.poolSession = v; }
+        return fineAmount;
+    }
+
+    public boolean isPoolSession()             {
+        return poolSession;
+    }
+
+    public void setPoolSession(boolean poolSession) {
+        this.poolSession = poolSession;
+    }
 
     // Polymorphism - Override getSessionSummary()
     @Override
     public String getSessionSummary() {
-        return "[PERSONAL] " + getClassName()
-                + " | " + getSessionDate() + " " + getSessionTime()
-                + " | " + getStatus()
-                + (poolSession ? " | Pool Session" : "")
-                + (fineAmount > 0 ? " | Fine: Rs." + fineAmount : "");
+        return "[PERSONAL] " + getClassName() + " | " + getSessionDate() + " " + getSessionTime() + " | " + getStatus() + (poolSession ? " | Pool Session" : "") + (fineAmount > 0 ? " | Fine: Rs." + fineAmount : "");
     }
 
     // File handling
