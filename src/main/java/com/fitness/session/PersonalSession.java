@@ -24,18 +24,21 @@ public class PersonalSession extends Session {
         return fineAmount;
     }
 
-    public boolean isPoolSession()             {
-        return poolSession;
+    public void setFineAmount(double fineAmount) {
+        this.fineAmount = fineAmount;
     }
 
-    public void setPoolSession(boolean poolSession) {
-        this.poolSession = poolSession;
-    }
+    public boolean isPoolSession()             { return poolSession; }
+    public void setPoolSession(boolean v)      { this.poolSession = v; }
 
     // Polymorphism - Override getSessionSummary()
     @Override
     public String getSessionSummary() {
-        return "[PERSONAL] " + getClassName() + " | " + getSessionDate() + " " + getSessionTime() + " | " + getStatus() + (poolSession ? " | Pool Session" : "") + (fineAmount > 0 ? " | Fine: Rs." + fineAmount : "");
+        return "[PERSONAL] " + getClassName()
+                + " | " + getSessionDate() + " " + getSessionTime()
+                + " | " + getStatus()
+                + (poolSession ? " | Pool Session" : "")
+                + (fineAmount > 0 ? " | Fine: Rs." + fineAmount : "");
     }
 
     // File handling
