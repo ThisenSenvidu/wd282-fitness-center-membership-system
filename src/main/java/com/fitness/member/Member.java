@@ -37,9 +37,6 @@ public class Member {
         this.status = status;
     }
 
-
-
-
     // Encapsulation - Getters & Setters
     public String getMemberId()                        { return memberId; }
     public void setMemberId(String memberId)           { this.memberId = memberId; }
