@@ -1,5 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
+
 /**
  * WorkoutProgram.java — Abstract base class for all workout programs.
  *
