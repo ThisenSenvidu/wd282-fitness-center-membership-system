@@ -1,5 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
+
 /**
  * StrengthProgram.java — Subclass of WorkoutProgram for strength training.
  *
