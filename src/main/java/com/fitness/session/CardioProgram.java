@@ -1,37 +1,28 @@
-package com.fitness.fitnesstrainer.model;
+package com.fitness.session;
 
-/**
- * CardioProgram.java — Subclass of WorkoutProgram for cardio training.
- *
- * OOP Concepts:
- *   Inheritance       — extends WorkoutProgram
- *   Polymorphism      — overrides getProgramDetails() and getProgramTypeLabel()
- *                       CardioProgram focuses on endurance and heart rate
- *   Constructor Chain — calls super() to reuse parent constructor
- */
 public class CardioProgram extends WorkoutProgram {
 
+    // Default Constructor
     public CardioProgram() {
-        super();
-        setProgramType("cardio");
+        super();                    // Call parent default constructor
+        setProgramType("cardio");   // Set program type
     }
 
-    public CardioProgram(String programId, String programName, String targetGoal,
-                         int durationWeeks, String exercises, String difficultyLevel) {
-        super(programId, programName, targetGoal,
-                durationWeeks, exercises, difficultyLevel, "cardio");
+    // Parameterized Constructor
+    public CardioProgram(String programId, String programName, String targetGoal, int durationWeeks, String exercises, String difficultyLevel) {
+
+        // Call parent parameterized constructor
+        super(programId, programName, targetGoal, durationWeeks, exercises, difficultyLevel, "cardio");
     }
 
-    // Polymorphism — CardioProgram gives cardio-specific details
-    // Different output from StrengthProgram.getProgramDetails()
     @Override
     public String getProgramDetails() {
-        return "Cardio Training | Focus: Endurance & Heart Rate | Goal: " + getTargetGoal() +
-                " | Duration: " + getDurationWeeks() + " weeks";
+        return "Cardio Training | Focus: Endurance & Heart Rate | Goal: " + getTargetGoal() + " | Duration: " + getDurationWeeks() + " weeks";
     }
 
     @Override
     public String getProgramTypeLabel() {
+
         return "Cardio Training";
     }
 }
