@@ -42,7 +42,7 @@ public abstract class Member {
         memberCount++;
     }
 
-    // Abstract method — 
+    // Abstract method — polymorphism
     public abstract String getMembershipDetails();
 
     public String getMemberTypeLabel() {
