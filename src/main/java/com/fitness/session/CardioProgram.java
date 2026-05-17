@@ -1,5 +1,6 @@
 package com.fitness.session;
 
+
 public class CardioProgram extends WorkoutProgram {
 
     // Default Constructor
