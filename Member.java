@@ -1,106 +1,102 @@
 package com.fitness.member;
 
-public class Member {
+/**
+ * Member.java — Abstract base class for all gym members.
+ *
+ * OOP Concepts:
+ *   Encapsulation      — private fields with getters/setters
+ *   Abstract Class     — cannot be instantiated directly
+ *   Abstraction        — abstract method getMembershipDetails()
+ *   Constructor Chain  — no-arg constructor calls full constructor via this()
+ *   Static Modifier    — memberCount tracks total objects created
+ */
+public abstract class Member {
 
     private String memberId;
-    private String firstName;
-    private String lastName;
-    private String dob;
-    private String gender;
-    private String address;
+    private String name;
     private String email;
     private String phone;
-    private String emergencyContact;
-    private String memberType;   // individual / couple
-    private String planId;
+    private String address;
+    private String membershipPlan;   // "regular" or "premium"
     private String joinDate;
-    private String status;       // active / inactive
 
-    public Member() {}
+    private static int memberCount = 0;
 
-        public Member(String memberId, String firstName, String lastName, String dob,
-                  String gender, String address, String email, String phone,
-                  String emergencyContact, String memberType, String planId,
-                  String joinDate, String status) {
-        this.memberId = memberId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.address = address;
-        this.email = email;
-        this.phone = phone;
-        this.emergencyContact = emergencyContact;
-        this.memberType = memberType;
-        this.planId = planId;
-        this.joinDate = joinDate;
-        this.status = status;
+    // No-arg constructor — Constructor Chaining
+    public Member() {
+        this("", "", "", "", "", "", "");
     }
 
-    // Encapsulation - Getters & Setters
-    public String getMemberId()                        { return memberId; }
-    public void setMemberId(String memberId)           { this.memberId = memberId; }
-
-    public String getFirstName()                       { return firstName; }
-    public void setFirstName(String firstName)         { this.firstName = firstName; }
-
-    public String getLastName()                        { return lastName; }
-    public void setLastName(String lastName)           { this.lastName = lastName; }
-
-    public String getFullName()                        { return firstName + " " + lastName; }
-
-    public String getDob()                             { return dob; }
-    public void setDob(String dob)                     { this.dob = dob; }
-
-    public String getGender()                          { return gender; }
-    public void setGender(String gender)               { this.gender = gender; }
-
-    public String getAddress()                         { return address; }
-    public void setAddress(String address)             { this.address = address; }
-
-    public String getEmail()                           { return email; }
-    public void setEmail(String email)                 { this.email = email; }
-
-    public String getPhone()                           { return phone; }
-    public void setPhone(String phone)                 { this.phone = phone; }
-
-    public String getEmergencyContact()                        { return emergencyContact; }
-    public void setEmergencyContact(String emergencyContact)   { this.emergencyContact = emergencyContact; }
-
-    public String getMemberType()                      { return memberType; }
-    public void setMemberType(String memberType)       { this.memberType = memberType; }
-
-    public String getPlanId()                          { return planId; }
-    public void setPlanId(String planId)               { this.planId = planId; }
-
-    public String getJoinDate()                        { return joinDate; }
-    public void setJoinDate(String joinDate)           { this.joinDate = joinDate; }
-
-    public String getStatus()                          { return status; }
-    public void setStatus(String status)               { this.status = status; }
-
-    // Polymorphism - subclasses override
-    public String getMemberSummary() {
-        return getFullName() + " | " + memberType + " | " + planId + " | " + status;
+    // Full constructor
+    public Member(String memberId, String name, String email,
+                  String phone, String address,
+                  String membershipPlan, String joinDate) {
+        this.memberId       = memberId;
+        this.name           = name;
+        this.email          = email;
+        this.phone          = phone;
+        this.address        = address;
+        this.membershipPlan = membershipPlan;
+        this.joinDate       = joinDate;
+        memberCount++;
     }
 
-    // File handling - serialize to CSV line
+    // Abstract method — Polymorphism
+    public abstract String getMembershipDetails();
+
+    public String getMemberTypeLabel() {
+        return "Member";
+    }
+
+    // Static method
+    public static int getMemberCount() {
+        return memberCount;
+    }
+
+    // Save member as pipe-separated line for members.txt
     public String toFileString() {
-        return memberId + "," + firstName + "," + lastName + "," + dob + "," +
-                gender + "," + address.replace(",", ";") + "," + email + "," +
-                phone + "," + emergencyContact + "," + memberType + "," +
-                planId + "," + joinDate + "," + status;
+        return memberId + "|" + name + "|" + email + "|" +
+               phone + "|" + address + "|" + membershipPlan + "|" + joinDate;
     }
 
-    // File handling - deserialize from CSV line
+    // Read one line from members.txt and return correct subclass
     public static Member fromFileString(String line) {
-        String[] p = line.split(",", 13);
-        if (p.length < 13) return null;
-        return new Member(
-                p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(),
-                p[4].trim(), p[5].replace(";", ",").trim(), p[6].trim(),
-                p[7].trim(), p[8].trim(), p[9].trim(), p[10].trim(),
-                p[11].trim(), p[12].trim()
-        );
+        String[] parts = line.split("\\|");
+        if (parts.length < 7) return null;
+        if (parts[5].trim().equals("premium")) {
+            return new PremiumMember(parts[0], parts[1], parts[2],
+                                     parts[3], parts[4], parts[6]);
+        } else {
+            return new RegularMember(parts[0], parts[1], parts[2],
+                                     parts[3], parts[4], parts[6]);
+        }
+    }
+
+    // Getters and Setters — Encapsulation
+    public String getMemberId()                    { return memberId; }
+    public void   setMemberId(String memberId)     { this.memberId = memberId; }
+
+    public String getName()                        { return name; }
+    public void   setName(String name)             { this.name = name; }
+
+    public String getEmail()                       { return email; }
+    public void   setEmail(String email)           { this.email = email; }
+
+    public String getPhone()                       { return phone; }
+    public void   setPhone(String phone)           { this.phone = phone; }
+
+    public String getAddress()                     { return address; }
+    public void   setAddress(String address)       { this.address = address; }
+
+    public String getMembershipPlan()                      { return membershipPlan; }
+    public void   setMembershipPlan(String membershipPlan) { this.membershipPlan = membershipPlan; }
+
+    public String getJoinDate()                    { return joinDate; }
+    public void   setJoinDate(String joinDate)     { this.joinDate = joinDate; }
+
+    @Override
+    public String toString() {
+        return "Member[id=" + memberId + ", name=" + name + ", plan=" + membershipPlan + "]";
     }
 }
+
