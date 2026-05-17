@@ -22,21 +22,8 @@ public abstract class MembershipPlan {
         planCount++;
     }
 
-    public MembershipPlan(String planID, String planName, String planType, String planVersion) {
-        this.planID = planID;
-        this.planName = planName;
-        this.planType = planType;
-        this.planVersion = planVersion;
-    }
 
-    public MembershipPlan(String planID, String planName, String planType) {
-        this.planID = planID;
-        this.planName = planName;
-        this.planType = planType;
-    }
-
-    // ===== Getters & Setters =====
-
+ //Getters & Setters
 
     public String getDescription() {
         return description;
@@ -97,6 +84,7 @@ public abstract class MembershipPlan {
     public void setPrice(double price) {
         this.price = price;
     }
+
 
     // ===== Polymorphism =====
     public abstract double calculatePrice();
