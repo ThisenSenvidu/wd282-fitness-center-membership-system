@@ -1,14 +1,6 @@
 package com.fitness.session;
 
-/**
- * StrengthProgram.java — Subclass of WorkoutProgram for strength training.
- *
- * OOP Concepts:
- *   Inheritance       — extends WorkoutProgram
- *   Polymorphism      — overrides getProgramDetails() and getProgramTypeLabel()
- *                       StrengthProgram focuses on sets, reps and muscle building
- *   Constructor Chain — calls super() to reuse parent constructor
- */
+
 public class StrengthProgram extends WorkoutProgram {
 
     public StrengthProgram() {
