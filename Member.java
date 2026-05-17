@@ -18,7 +18,25 @@ public class Member {
 
     public Member() {}
 
-   
+        public Member(String memberId, String firstName, String lastName, String dob,
+                  String gender, String address, String email, String phone,
+                  String emergencyContact, String memberType, String planId,
+                  String joinDate, String status) {
+        this.memberId = memberId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.emergencyContact = emergencyContact;
+        this.memberType = memberType;
+        this.planId = planId;
+        this.joinDate = joinDate;
+        this.status = status;
+    }
+
     // Encapsulation - Getters & Setters
     public String getMemberId()                        { return memberId; }
     public void setMemberId(String memberId)           { this.memberId = memberId; }
