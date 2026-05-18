@@ -1,14 +1,6 @@
-package com.fitness.fitnesstrainer.model;
+package com.fitness.session;
 
-/**
- * CardioProgram.java — Subclass of WorkoutProgram for cardio training.
- *
- * OOP Concepts:
- *   Inheritance       — extends WorkoutProgram
- *   Polymorphism      — overrides getProgramDetails() and getProgramTypeLabel()
- *                       CardioProgram focuses on endurance and heart rate
- *   Constructor Chain — calls super() to reuse parent constructor
- */
+
 public class CardioProgram extends WorkoutProgram {
 
     public CardioProgram() {
