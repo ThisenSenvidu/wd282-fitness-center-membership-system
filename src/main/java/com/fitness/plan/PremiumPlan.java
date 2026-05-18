@@ -2,38 +2,30 @@ package com.fitness.plan;
 
 public class PremiumPlan extends MembershipPlan {
 
-    private boolean personalTrainer;
-    private boolean accessPool;
-    private boolean nutritionAdvice;
+    private static final double DISCOUNT_RATE = 0.10;
 
-    public PremiumPlan(int duration, String planID, String planName, String planType, String planVersion, double price, String status, boolean accessPool, boolean nutritionAdvice, boolean personalTrainer) {
-        super(duration, planID, planName, planType, planVersion, price, status);
-        this.accessPool = accessPool;
-        this.nutritionAdvice = nutritionAdvice;
-        this.personalTrainer = personalTrainer;
+
+    public PremiumPlan() {
+        super();
+        setPlanType("premium");
     }
 
-    public boolean isAccessPool() {
-        return accessPool;
+
+    public PremiumPlan(int duration, String planID, String planName, String planType, String planVersion, double price, String description) {
+        super(duration, planID, planName, planType, planVersion, price, description);
     }
 
-    public void setAccessPool(boolean accessPool) {
-        this.accessPool = accessPool;
+    public PremiumPlan(int duration, String planID, String planName, double price, String description) {
+        super(duration, planID, planName, "premium", "", price, description);
     }
 
-    public boolean isNutritionAdvice() {
-        return nutritionAdvice;
+    @Override
+    public double calculatePrice() {
+        return getPrice() * (1 - DISCOUNT_RATE);
     }
 
-    public void setNutritionAdvice(boolean nutritionAdvice) {
-        this.nutritionAdvice = nutritionAdvice;
-    }
-
-    public boolean isPersonalTrainer() {
-        return personalTrainer;
-    }
-
-    public void setPersonalTrainer(boolean personalTrainer) {
-        this.personalTrainer = personalTrainer;
+    @Override
+    public String getPlanTypeLabel() {
+        return "Premium Plan";
     }
 }

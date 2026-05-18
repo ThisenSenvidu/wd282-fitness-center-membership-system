@@ -6,7 +6,7 @@ public class BasicPlan extends MembershipPlan {
         super(duration, planID, planName, planType, planVersion, price, description);
     }
 
-    public BasicPlan(String planID, String planName, double price, String planVersion, int duration,String description){
+    public BasicPlan(String planID, String planName, double price, int duration,String description){
         super(duration, planID, planName,"Basic", "", price, description);
 
     }

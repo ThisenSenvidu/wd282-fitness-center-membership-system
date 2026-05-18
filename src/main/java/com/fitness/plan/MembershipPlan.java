@@ -124,7 +124,7 @@ public abstract class MembershipPlan {
             String planType = parts[5].trim();
 
             if (planType.equals("premium")) {
-                return new PremiumPlan(planID, planName, price, duration, description);
+                return new PremiumPlan( duration,planID, planName, price, description);
             } else {
                 return new BasicPlan(planID, planName, price, duration, description);
             }
