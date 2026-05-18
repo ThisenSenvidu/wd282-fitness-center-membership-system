@@ -11,6 +11,10 @@ public abstract class MembershipPlan {
     private String description;
     private static int planCount = 0;
 
+    public MembershipPlan(){
+        this(0, "","","","",0,"");
+    }
+
     public MembershipPlan(int duration, String planID, String planName, String planType, String planVersion, double price, String description) {
         this.duration = duration;
         this.planID = planID;
@@ -23,7 +27,9 @@ public abstract class MembershipPlan {
     }
 
 
- //Getters & Setters
+    //Getters & Setters
+
+
 
     public String getDescription() {
         return description;
@@ -86,13 +92,20 @@ public abstract class MembershipPlan {
     }
 
 
+
+
     // ===== Polymorphism =====
     public abstract double calculatePrice();
 
-    public String getPlanTypeLabel() { return "Plan"; }
+    public String getPlanTypeLabel() {
+        return "Plan";
+    }
 
     // ===== Static =====
-    public static int getPlanCount() { return planCount; }
+    public static int getPlanCount() {
+        return planCount;
+    }
+
 
     // ===== File Handling =====
     public String toFileString() {
@@ -103,12 +116,12 @@ public abstract class MembershipPlan {
         String[] parts = line.split("\\|");
         if (parts.length < 6) return null;
         try {
-            String planID       = parts[0].trim();
-            String planName     = parts[1].trim();
-            double price        = Double.parseDouble(parts[2].trim());
-            int duration        = Integer.parseInt(parts[3].trim());
-            String description  = parts[4].trim();
-            String planType     = parts[5].trim();
+            String planID = parts[0].trim();
+            String planName = parts[1].trim();
+            double price = Double.parseDouble(parts[2].trim());
+            int duration = Integer.parseInt(parts[3].trim());
+            String description = parts[4].trim();
+            String planType = parts[5].trim();
 
             if (planType.equals("premium")) {
                 return new PremiumPlan(planID, planName, price, duration, description);
@@ -119,4 +132,13 @@ public abstract class MembershipPlan {
             return null;
         }
     }
-}
+        //Display
+        public String getFormattedPrice() {
+            return String.format("Rs. %.2f / month", calculatePrice());
+        }
+
+        @Override
+    public String  toString(){
+        return "MembershipPlan[id=" + planID + ", name=" + planName + ", type=" + planType + "]";
+        }
+    }
