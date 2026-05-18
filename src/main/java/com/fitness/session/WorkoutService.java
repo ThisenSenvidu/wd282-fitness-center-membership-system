@@ -1,23 +1,13 @@
-package com.fitness.fitnesstrainer.service;
+package com.fitness.session;
 
-
-import com.fitness.fitnesstrainer.model.CardioProgram;
-import com.fitness.fitnesstrainer.model.StrengthProgram;
-import com.fitness.fitnesstrainer.model.WorkoutProgram;
-import com.fitness.fitnesstrainer.util.WorkoutFileHandler;
+import com.fitness.session.CardioProgram;
+import com.fitness.session.StrengthProgram;
+import com.fitness.session.WorkoutProgram;
+import com.fitness.util.WorkoutFileHandler;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
-/**
- * WorkoutService.java — Business logic layer for Workout Program Management.
- *
- * Spring Boot concept:
- *   @Service — Spring manages this as a bean; injected into WorkoutController
- *
- * OOP concepts:
- *   Encapsulation — hides file-handling details from the controller
- *   Polymorphism  — builds StrengthProgram or CardioProgram based on programType
- */
+
 @Service
 public class WorkoutService {
 
