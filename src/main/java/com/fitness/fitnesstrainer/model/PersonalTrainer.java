@@ -1,6 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
-// Inheritance: extends Trainer
+// Inheritance
 public class PersonalTrainer extends Trainer {
 
     // No-arg constructor — chains to parent via super()
@@ -14,7 +14,7 @@ public class PersonalTrainer extends Trainer {
         super(trainerId, name, email, phone, specialization, availability, "personal");
     }
 
-    // Polymorphism: overrides the abstract method from Trainer
+    // Polymorphism - overrides the abstract method from Trainer
     @Override
     public String getScheduleDescription() {
         return "1-on-1 Personal Sessions | " + getAvailability();
