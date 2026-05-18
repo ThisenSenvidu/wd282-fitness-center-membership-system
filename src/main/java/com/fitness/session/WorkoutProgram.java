@@ -1,17 +1,5 @@
-package com.fitness.fitnesstrainer.model;
+package com.fitness.session;
 
-
-/**
- * WorkoutProgram.java — Abstract base class for all workout programs.
- *
- * OOP Concepts:
- *   Encapsulation      — private fields with getters/setters
- *   Abstract Class     — cannot be instantiated directly
- *   Abstraction        — abstract method getProgramDetails() forces subclasses
- *                        to describe their own program type
- *   Constructor Chain  — no-arg constructor calls full constructor via this()
- *   Static Modifier    — programCount tracks total objects created
- */
 public abstract class WorkoutProgram {
 
     private String programId;
@@ -89,26 +77,67 @@ public abstract class WorkoutProgram {
     }
 
     // Getters and Setters — Encapsulation
-    public String getProgramId()                           { return programId; }
-    public void   setProgramId(String programId)           { this.programId = programId; }
 
-    public String getProgramName()                         { return programName; }
-    public void   setProgramName(String programName)       { this.programName = programName; }
 
-    public String getTargetGoal()                          { return targetGoal; }
-    public void   setTargetGoal(String targetGoal)         { this.targetGoal = targetGoal; }
+    public String getProgramId() {
+        return programId;
+    }
 
-    public int  getDurationWeeks()                         { return durationWeeks; }
-    public void setDurationWeeks(int durationWeeks)        { this.durationWeeks = durationWeeks; }
+    public void setProgramId(String programId) {
+        this.programId = programId;
+    }
 
-    public String getExercises()                           { return exercises; }
-    public void   setExercises(String exercises)           { this.exercises = exercises; }
+    public String getProgramName() {
+        return programName;
+    }
 
-    public String getDifficultyLevel()                     { return difficultyLevel; }
-    public void   setDifficultyLevel(String difficultyLevel) { this.difficultyLevel = difficultyLevel; }
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
 
-    public String getProgramType()                         { return programType; }
-    public void   setProgramType(String programType)       { this.programType = programType; }
+    public String getTargetGoal() {
+        return targetGoal;
+    }
+
+    public void setTargetGoal(String targetGoal) {
+        this.targetGoal = targetGoal;
+    }
+
+    public int getDurationWeeks() {
+        return durationWeeks;
+    }
+
+    public void setDurationWeeks(int durationWeeks) {
+        this.durationWeeks = durationWeeks;
+    }
+
+    public String getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(String exercises) {
+        this.exercises = exercises;
+    }
+
+    public String getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public void setDifficultyLevel(String difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    public String getProgramType() {
+        return programType;
+    }
+
+    public void setProgramType(String programType) {
+        this.programType = programType;
+    }
+
+    public static void setProgramCount(int programCount) {
+        WorkoutProgram.programCount = programCount;
+    }
 
     @Override
     public String toString() {
