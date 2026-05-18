@@ -2,7 +2,7 @@ package com.fitness.fitnesstrainer.model;
 
 public abstract class Trainer {
 
-    // Private fields — Encapsulation
+    //Encapsulation
     private String trainerId;
     private String name;
     private String email;
@@ -11,7 +11,7 @@ public abstract class Trainer {
     private String availability;
     private String trainerType;
 
-    // Static field — shared by all Trainer objects
+    // shared by all Trainer objects
     private static int trainerCount = 0;
 
     // No-arg constructor — chains to full constructor (Constructor Chaining)
@@ -31,7 +31,7 @@ public abstract class Trainer {
         trainerCount++;
     }
 
-    // Abstract method — subclasses MUST override this (Abstraction + Polymorphism)
+    // subclasses MUST override this (Abstraction + Polymorphism)
     public abstract String getScheduleDescription();
 
     // Can be overridden by subclasses
@@ -111,8 +111,5 @@ public abstract class Trainer {
         this.trainerType = t;
     }
 
-    @Override
-    public String toString() {
-        return "Trainer[id=" + trainerId + ", name=" + name + "]";
-    }
+
 }
