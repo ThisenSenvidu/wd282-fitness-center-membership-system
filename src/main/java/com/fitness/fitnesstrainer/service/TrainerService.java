@@ -45,12 +45,27 @@ public class TrainerService {
     // Polymorphism: picks the right subclass based on trainerType
     public void addTrainer(String name, String email, String phone, String specialization, String availability, String trainerType) {
         Trainer trainer;
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new RuntimeException("Name cannot be empty");
+        }
+
+        if (!email.contains("@")) {
+            throw new RuntimeException("Invalid email format");
+        }
+
+        if (phone.length() != 10) {
+            throw new RuntimeException("Phone must be 10 digits");
+        }
+
         if ("personal".equals(trainerType)) {
             trainer = new PersonalTrainer(null,name.trim(),email.trim(),phone.trim(),specialization.trim(),availability.trim());
         }
         else {
             trainer = new GroupTrainer(null,name.trim(),email.trim(),phone.trim(),specialization.trim(),availability.trim());
         }
+
+
         try {
             fileHandler.addTrainer(trainer);
         }
