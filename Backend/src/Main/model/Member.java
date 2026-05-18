@@ -10,22 +10,7 @@ package com.fitness.fitnesstrainer.model;
  *   Constructor Chain  — no-arg constructor calls full constructor via this()
  *   Static Modifier    — memberCount tracks total objects created
  */
-public abstract class Member {
 
-    private String memberId;
-    private String name;
-    private String email;
-    private String phone;
-    private String address;
-    private String membershipPlan;   // "regular" or "premium"
-    private String joinDate;
-
-    private static int memberCount = 0;
-
-    // No-arg constructor — Constructor Chaining
-    public Member() {
-        this("", "", "", "", "", "", "");
-    }
 
     // Full constructor
     public Member(String memberId, String name, String email,
