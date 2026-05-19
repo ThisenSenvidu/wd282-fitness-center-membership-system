@@ -8,8 +8,8 @@ public class CardioProgram extends WorkoutProgram {
         setProgramType("cardio");
     }
 
-    public CardioProgram(String programId, String programName, String targetGoal,
-                         int durationWeeks, String exercises, String difficultyLevel) {
+    public CardioProgram(String programId, String programName, String targetGoal, int durationWeeks, String exercises, String difficultyLevel) {
+
         super(programId, programName, targetGoal, durationWeeks, exercises, difficultyLevel, "cardio");
     }
 
