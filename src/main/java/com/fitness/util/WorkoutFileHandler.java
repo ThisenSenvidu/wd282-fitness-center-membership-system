@@ -14,8 +14,7 @@ import java.util.ArrayList;
 @Component
 public class WorkoutFileHandler {
 
-
-    @Value("${app.workout.file-path}")
+    @Value("${app.workout.file-path:data/workouts.txt}")
     private String filePath;
 
     // Runs once at startup — creates folder and file if they don't exist
