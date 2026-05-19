@@ -1,0 +1,2 @@
+PLN-3002|monthly lite|2500.0|1|lite|Basic
+PLN-3002|gold|3000.0|1|gold|premium
