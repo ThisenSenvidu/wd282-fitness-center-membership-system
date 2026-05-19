@@ -9,7 +9,7 @@ package com.fitness.fitnesstrainer.model;
  *   Constructor Chain — calls super() to reuse parent constructor
  */
 public class PremiumMember extends Member {
-
+    //Constructor chain//
     public PremiumMember() {
         super();
         setMembershipPlan("premium");
