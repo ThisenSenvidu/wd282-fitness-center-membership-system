@@ -6,6 +6,7 @@ public class StrengthProgram extends WorkoutProgram {
     public StrengthProgram() {
         super();
         setProgramType("strength");
+
     }
 
     public StrengthProgram(String programId, String programName, String targetGoal,
