@@ -1,36 +1,14 @@
-package com.fitness.fitnesstrainer.controller;
+package com.fitness.session;
 
-import com.fitness.fitnesstrainer.model.WorkoutProgram;
-import com.fitness.fitnesstrainer.service.WorkoutService;
+import com.fitness.session.WorkoutProgram;
+import com.fitness.session.WorkoutService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 
-/**
- * WorkoutController.java — Handles all HTTP requests for Workout Program Management.
- *
- * Spring Boot concepts:
- *   @Controller         — returns view (HTML page) names
- *   @RequestMapping     — base URL prefix /workouts
- *   @GetMapping         — handles HTTP GET requests
- *   @PostMapping        — handles HTTP POST requests
- *   @PathVariable       — reads {id} from the URL path
- *   @RequestParam       — reads form field values
- *   Model               — passes data to Thymeleaf templates
- *   RedirectAttributes  — flash messages that survive a redirect
- *
- * URL map:
- *   GET  /workouts              → workout-list.html
- *   GET  /workouts/search       → workout-list.html (search results)
- *   GET  /workouts/add          → workout-create.html
- *   POST /workouts/add          → save → redirect to list
- *   GET  /workouts/{id}         → workout-profile.html
- *   GET  /workouts/{id}/edit    → workout-update.html
- *   POST /workouts/{id}/edit    → save update → redirect
- *   POST /workouts/{id}/delete  → delete → redirect
- */
+
 @Controller
 @RequestMapping("/workouts")
 public class WorkoutController {
