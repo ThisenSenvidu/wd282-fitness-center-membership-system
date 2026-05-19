@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
+import com.fitness.plan.model.*;
 
 
 @Controller
@@ -43,7 +44,7 @@ public class PlanController {
     // GET /plans/add — show creation form
     @GetMapping("/add")
     public String showAddForm() {
-        return "plan-create";
+        return "plan-add";
     }
 
     @PostMapping("/add")                                                   // for add.html
@@ -58,7 +59,7 @@ public class PlanController {
         if (isEmpty(planName) || isEmpty(price) || isEmpty(durationMonths) ||
                 isEmpty(description) || isEmpty(planType)) {
             model.addAttribute("errorMsg", "All fields are required.");
-            return "plan-create";
+            return "plan-add";
         }
 
         try {
@@ -69,22 +70,22 @@ public class PlanController {
             return "redirect:/plans";
         } catch (NumberFormatException e) {
             model.addAttribute("errorMsg", "Price must be a number and Duration must be a whole number.");
-            return "plan-create";
+            return "plan-add";
         } catch (Exception e) {
             model.addAttribute("errorMsg", e.getMessage());
-            return "plan-create";
+            return "plan-add";
         }
     }
 
     @GetMapping("/{id}/edit")                                                                 //for edit.html
     public String showEditForm(@PathVariable String id, Model model) {
-        MembershipPlan plan = planService.getPlanById(id);
+        MembershipPlan plan = planService.getPlanByID(id);
         if (plan == null) {
             model.addAttribute("errorMsg", "Plan not found.");
             return listPlans(model);
         }
         model.addAttribute("plan", plan);
-        return "plan-update";
+        return "plan-edit";
     }
 
     @PostMapping("/{id}/edit")
@@ -100,8 +101,8 @@ public class PlanController {
         if (isEmpty(planName) || isEmpty(price) || isEmpty(durationMonths) ||
                 isEmpty(description) || isEmpty(planType)) {
             model.addAttribute("errorMsg", "All fields are required.");
-            model.addAttribute("plan", planService.getPlanById(id));
-            return "plan-update";
+            model.addAttribute("plan", planService.getPlanByID(id));
+            return "plan-edit";
         }
 
         try {
@@ -112,8 +113,8 @@ public class PlanController {
                     ok ? "Plan updated successfully!" : "Plan not found.");
         } catch (NumberFormatException e) {
             model.addAttribute("errorMsg", "Price must be a number and Duration must be a whole number.");
-            model.addAttribute("plan", planService.getPlanById(id));
-            return "plan-update";
+            model.addAttribute("plan", planService.getPlanByID(id));
+            return "plan-edit";
         } catch (Exception e) {
             ra.addFlashAttribute("errorMsg", e.getMessage());
         }

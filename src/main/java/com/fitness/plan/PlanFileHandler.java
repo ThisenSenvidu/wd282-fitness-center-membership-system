@@ -28,6 +28,7 @@ public class PlanFileHandler {
 
     public void addPlan(MembershipPlan plan) throws IOException {                                                //create
         String newID = generateId();
+        plan.setPlanID(newID);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
             writer.write(plan.toFileString());
             writer.newLine();
