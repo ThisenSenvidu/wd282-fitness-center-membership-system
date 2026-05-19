@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Trainer – FitCenter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; }
+        .navbar { background: #1a1a2e; }
+        .navbar-brand { color: #e94560 !important; font-weight: 700; }
+        .nav-link { color: #bbb !important; }
+        .nav-link:hover, .nav-link.active { color: #e94560 !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        .card-header {
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            color: white; border-radius: 12px 12px 0 0 !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 0 .2rem rgba(233,69,96,.2);
+        }
+        .btn-submit { background: #e94560; border: none; }
+        .btn-submit:hover { background: #c73652; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/trainers"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/trainers"><i class="bi bi-people-fill me-1"></i>Trainers</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/trainers/add"><i class="bi bi-person-plus-fill me-1"></i>Register</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/trainers">Trainers</a></li>
+                    <li class="breadcrumb-item active">Register New Trainer</li>
+                </ol>
+            </nav>
+
+            <!-- Error message (Thymeleaf: shown only if errorMsg is set by controller) -->
+            <div th:if="${errorMsg}" class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${errorMsg}"></span>
+            </div>
+
+            <div class="card">
+                <div class="card-header p-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Register New Trainer</h5>
+                </div>
+                <div class="card-body p-4">
+
+                    <!--
+                        th:action  – Thymeleaf sets the form action URL.
+                        method="post" → maps to @PostMapping("/add") in TrainerController.
+                        Each input name= maps to a @RequestParam in the controller.
+                    -->
+                    <form th:action="@{/trainers/add}" method="post">
+
+                        <!-- Trainer Type -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Trainer Type <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                           name="trainerType" id="typePersonal" value="personal" required>
+                                    <label class="form-check-label" for="typePersonal">
+                                        <i class="bi bi-person-fill text-danger me-1"></i>Personal Trainer
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                           name="trainerType" id="typeGroup" value="group">
+                                    <label class="form-check-label" for="typeGroup">
+                                        <i class="bi bi-people-fill text-primary me-1"></i>Group Trainer
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">
+                                Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="name"
+                                   name="name" placeholder="e.g. Mandini Nanayakkara" required>
+                        </div>
+
+                        <!-- Specialization -->
+                        <div class="mb-3">
+                            <label for="specialization" class="form-label fw-bold">
+                                Specialization <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="specialization"
+                                   name="specialization" placeholder="e.g. Yoga, Strength Training" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">
+                                Email <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" class="form-control" id="email"
+                                   name="email" placeholder="trainer@fitcenter.lk" required>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-bold">
+                                Phone <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="phone"
+                                   name="phone" placeholder="e.g. 0771234567" required>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="mb-4">
+                            <label for="availability" class="form-label fw-bold">
+                                Availability <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="availability"
+                                   name="availability" placeholder="e.g. Mon-Fri 6AM-9PM" required>
+                            <div class="form-text">Describe days and times this trainer is available.</div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-submit text-white px-4">
+                                <i class="bi bi-check-lg me-1"></i>Register Trainer
+                            </button>
+                            <a href="/trainers" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
