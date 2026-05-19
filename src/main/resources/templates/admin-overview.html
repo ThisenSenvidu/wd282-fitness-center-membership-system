@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Overview – FitCenter Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .nav-link:hover { color: #e94560 !important; }
+    .banner { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+              color: white; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .module-card { border-left: 5px solid #e94560; }
+    .module-header { font-weight: 700; font-size: 1.05rem; }
+    .stat-pill {
+      display: inline-block; padding: .3rem .9rem;
+      border-radius: 20px; font-weight: 600; color: white; font-size: .9rem;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/admin/dashboard">
+      <i class="bi bi-shield-lock-fill me-1"></i> FitCenter Admin
+    </a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link active" href="/admin/overview">Overview</a></li>
+      <li class="nav-item"><a class="nav-link" href="/admin/accounts">Manage Admins</a></li>
+      <li class="nav-item"><a class="nav-link text-danger" href="/admin/logout">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container pb-5">
+
+  <div class="banner">
+    <h3 class="mb-1"><i class="bi bi-bar-chart me-2"></i>System Overview</h3>
+    <p class="mb-0 opacity-75">A summary of all records across every module in the system.</p>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Admins -->
+    <div class="col-md-6">
+      <div class="card module-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-shield-lock-fill text-danger me-2"></i>Admin Accounts
+          </span>
+          <span class="stat-pill" style="background:#e94560;"
+                th:text="${stats.totalAdmins} + ' accounts'">0 accounts</span>
+        </div>
+        <p class="text-muted mb-3">Manages system access and administrative controls.</p>
+        <a href="/admin/accounts" class="btn btn-outline-danger btn-sm">
+          <i class="bi bi-arrow-right me-1"></i>Manage Admins
+        </a>
+      </div>
+    </div>
+
+    <!-- Trainers -->
+    <div class="col-md-6">
+      <div class="card module-card p-4" style="border-color:#0f3460;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-person-badge-fill me-2" style="color:#0f3460;"></i>Trainers
+          </span>
+          <span class="stat-pill" style="background:#0f3460;"
+                th:text="${stats.totalTrainers} + ' trainers'">0 trainers</span>
+        </div>
+        <p class="text-muted mb-3">Personal and group fitness trainers registered in the system.</p>
+        <a href="/trainers" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-arrow-right me-1"></i>View Trainers
+        </a>
+      </div>
+    </div>
+
+    <!-- Members -->
+    <div class="col-md-6">
+      <div class="card module-card p-4" style="border-color:#28a745;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-people-fill me-2 text-success"></i>Members
+          </span>
+          <span class="stat-pill" style="background:#28a745;"
+                th:text="${stats.totalMembers} + ' members'">0 members</span>
+        </div>
+        <p class="text-muted mb-3">Regular and premium gym members registered in the system.</p>
+        <a href="/members" class="btn btn-outline-success btn-sm">
+          <i class="bi bi-arrow-right me-1"></i>View Members
+        </a>
+      </div>
+    </div>
+
+    <!-- Payments -->
+    <div class="col-md-6">
+      <div class="card module-card p-4" style="border-color:#fd7e14;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-credit-card-fill me-2 text-warning"></i>Payments
+          </span>
+          <span class="stat-pill" style="background:#fd7e14;"
+                th:text="${stats.totalPayments} + ' payments'">0 payments</span>
+        </div>
+        <p class="text-muted mb-3">Cash and card payment records for all gym memberships.</p>
+        <a href="/payments" class="btn btn-outline-warning btn-sm">
+          <i class="bi bi-arrow-right me-1"></i>View Payments
+        </a>
+      </div>
+    </div>
+
+    <!-- Membership Plans -->
+    <div class="col-md-6">
+      <div class="card module-card p-4" style="border-color:#6f42c1;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-card-checklist me-2" style="color:#6f42c1;"></i>Membership Plans
+          </span>
+          <span class="stat-pill" style="background:#6f42c1;"
+                th:text="${stats.totalPlans} + ' plans'">0 plans</span>
+        </div>
+        <p class="text-muted mb-3">Basic and premium membership plans with pricing and duration.</p>
+        <a href="/plans" class="btn btn-sm" style="border:1px solid #6f42c1;color:#6f42c1;">
+          <i class="bi bi-arrow-right me-1"></i>View Plans
+        </a>
+      </div>
+    </div>
+
+    <!-- Workout Programs -->
+    <div class="col-md-6">
+      <div class="card module-card p-4" style="border-color:#17a2b8;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="module-header">
+            <i class="bi bi-activity me-2 text-info"></i>Workout Programs
+          </span>
+          <span class="stat-pill" style="background:#17a2b8;"
+                th:text="${stats.totalPrograms} + ' programs'">0 programs</span>
+        </div>
+        <p class="text-muted mb-3">Strength and cardio workout programs available for members.</p>
+        <a href="/workouts" class="btn btn-outline-info btn-sm">
+          <i class="bi bi-arrow-right me-1"></i>View Programs
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mt-4 text-center">
+    <a href="/admin/dashboard" class="btn btn-dark px-4">
+      <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+    </a>
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
