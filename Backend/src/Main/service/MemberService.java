@@ -9,7 +9,9 @@ import java.util.ArrayList;
 
 /**
  * MemberService.java — Business logic layer for Member Management.
- */
+ */ 
+
+//Dependancy//
 @Service
 public class MemberService {
 
