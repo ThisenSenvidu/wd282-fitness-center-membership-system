@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Update Payment – FitCenter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; }
+        .navbar { background: #1a1a2e; }
+        .navbar-brand { color: #e94560 !important; font-weight: 700; }
+        .nav-link { color: #bbb !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        .card-header { background: linear-gradient(135deg, #0f3460, #1a1a2e);
+            color: white; border-radius: 12px 12px 0 0 !important; }
+        .form-control:focus, .form-select:focus {
+            border-color: #0f3460; box-shadow: 0 0 0 .2rem rgba(15,52,96,.2);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/payments"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/payments">Payments</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+            <div class="card">
+                <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Update Payment</h5>
+                    <span class="badge bg-light text-dark font-monospace"
+                          th:text="${payment.paymentId}"></span>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/payments/{id}/edit(id=${payment.paymentId})}" method="post">
+
+                        <!-- Payment Type -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Payment Type *</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentType"
+                                           value="cash" th:checked="${payment.paymentType == 'cash'}" required>
+                                    <label class="form-check-label">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Cash
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentType"
+                                           value="card" th:checked="${payment.paymentType == 'card'}">
+                                    <label class="form-check-label">
+                                        <i class="bi bi-credit-card-fill text-primary me-1"></i>Card
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
+                          Member Dropdown — pre-selects the current member.
+                          Connected to members.txt via MemberService.
+                        -->
+                        <div class="mb-3" th:if="${not #lists.isEmpty(members)}">
+                            <label class="form-label fw-bold">
+                                Member *
+                                <span class="badge bg-success ms-1" style="font-size:.7rem;">
+                  <i class="bi bi-link-45deg"></i> linked to members
+                </span>
+                            </label>
+                            <select class="form-select" id="memberDropdown"
+                                    onchange="fillMemberDetails(this)" required>
+                                <option value="" disabled>Choose a member...</option>
+                                <option th:each="m : ${members}"
+                                        th:value="${m.memberId}"
+                                        th:text="${m.memberId + '  —  ' + m.name}"
+                                        th:selected="${m.memberId == payment.memberId}"
+                                        th:attr="data-name=${m.name}">
+                                </option>
+                            </select>
+                            <input type="hidden" name="memberId"   id="memberIdField"
+                                   th:value="${payment.memberId}">
+                            <input type="hidden" name="memberName" id="memberNameField"
+                                   th:value="${payment.memberName}">
+                        </div>
+
+                        <!-- Fallback if no members exist -->
+                        <div th:unless="${not #lists.isEmpty(members)}">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Member ID *</label>
+                                <input type="text" class="form-control" name="memberId"
+                                       th:value="${payment.memberId}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Member Name *</label>
+                                <input type="text" class="form-control" name="memberName"
+                                       th:value="${payment.memberName}" required>
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Amount (Rs.) *</label>
+                            <input type="number" class="form-control" name="amount"
+                                   th:value="${payment.amount}" step="0.01" min="0" required>
+                        </div>
+
+                        <!-- Payment Date -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Payment Date *</label>
+                            <input type="date" class="form-control" name="paymentDate"
+                                   th:value="${payment.paymentDate}" required>
+                        </div>
+
+                        <!-- Payment Status -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Payment Status *</label>
+                            <select class="form-select" name="paymentStatus" required>
+                                <option value="paid"
+                                        th:selected="${payment.paymentStatus == 'paid'}">Paid</option>
+                                <option value="pending"
+                                        th:selected="${payment.paymentStatus == 'pending'}">Pending</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-1"></i>Save Changes
+                            </button>
+                            <a href="/payments" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Cancel
+                            </a>
+                            <form th:action="@{/payments/{id}/delete(id=${payment.paymentId})}"
+                                  method="post" class="ms-auto"
+                                  onsubmit="return confirm('Delete this payment?');">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </button>
+                            </form>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function fillMemberDetails(select) {
+        const opt = select.options[select.selectedIndex];
+        document.getElementById('memberIdField').value   = opt.value;
+        document.getElementById('memberNameField').value = opt.dataset.name || '';
+    }
+</script>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>
