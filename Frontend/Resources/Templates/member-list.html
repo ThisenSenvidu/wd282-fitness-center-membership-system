@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member List – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .nav-link:hover { color: #e94560 !important; }
+    .banner { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+              color: white; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .table thead th { background: #1a1a2e; color: white; }
+    .badge-premium { background-color: #e94560; }
+    .badge-regular { background-color: #0f3460; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+      <a class="navbar-brand" href="/home"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/members"><i class="bi bi-people-fill me-1"></i>Members</a></li>
+      <li class="nav-item"><a class="nav-link" href="/members/add"><i class="bi bi-person-plus-fill me-1"></i>Register</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container pb-5">
+  <div class="banner d-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="mb-1"><i class="bi bi-people me-2"></i>Member Management</h3>
+      <p class="mb-0 opacity-75">Register, search, update and delete gym members.</p>
+    </div>
+    <a href="/members/add" class="btn btn-danger"><i class="bi bi-plus-lg me-1"></i>Add Member</a>
+  </div>
+
+  <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show">
+    <span th:text="${successMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show">
+    <span th:text="${errorMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <div class="card mb-4"><div class="card-body">
+    <form action="/members/search" method="get">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" name="keyword"
+               placeholder="Search by name or email..." th:value="${keyword}">
+        <button class="btn btn-dark">Search</button>
+        <a class="btn btn-outline-secondary" href="/members">Reset</a>
+      </div>
+    </form>
+  </div></div>
+
+  <div class="card"><div class="card-body p-0">
+    <div th:if="${#lists.isEmpty(members)}" class="text-center py-5">
+      <i class="bi bi-people display-3 text-muted"></i>
+      <p class="mt-2 text-muted">No members found.</p>
+      <a href="/members/add" class="btn btn-dark">Add First Member</a>
+    </div>
+    <div th:unless="${#lists.isEmpty(members)}">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr>
+          <th>ID</th><th>Name</th><th>Plan</th><th>Email</th>
+          <th>Phone</th><th>Join Date</th><th>Benefits</th><th class="text-center">Actions</th>
+        </tr></thead>
+        <tbody>
+          <tr th:each="m : ${members}">
+            <td><code th:text="${m.memberId}"></code></td>
+            <td><strong th:text="${m.name}"></strong></td>
+            <td>
+              <span th:if="${m.membershipPlan == 'premium'}" class="badge badge-premium"
+                    th:text="${m.memberTypeLabel}"></span>
+              <span th:unless="${m.membershipPlan == 'premium'}" class="badge badge-regular"
+                    th:text="${m.memberTypeLabel}"></span>
+            </td>
+            <td th:text="${m.email}"></td>
+            <td th:text="${m.phone}"></td>
+            <td th:text="${m.joinDate}"></td>
+            <!-- Polymorphism: getMembershipDetails() returns different text per subclass -->
+            <td><small class="text-muted" th:text="${m.membershipDetails}"></small></td>
+            <td class="text-center">
+              <a th:href="@{/members/{id}(id=${m.memberId})}"
+                 class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-eye"></i></a>
+              <a th:href="@{/members/{id}/edit(id=${m.memberId})}"
+                 class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
+              <form th:action="@{/members/{id}/delete(id=${m.memberId})}"
+                    method="post" class="d-inline"
+                    th:attr="onsubmit=|return confirm('Delete ' + ${m.name} + '?')|">
+                  <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card-footer text-muted small">
+        Total: <strong th:text="${#lists.size(members)}"></strong> member(s)
+      </div>
+    </div>
+  </div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

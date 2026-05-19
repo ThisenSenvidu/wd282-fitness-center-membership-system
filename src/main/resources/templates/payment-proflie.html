@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <title>Payment Details – FitCenter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; }
+        .navbar { background: #1a1a2e; }
+        .navbar-brand { color: #e94560 !important; font-weight: 700; }
+        .nav-link { color: #bbb !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        .profile-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            color: white; padding: 2.5rem; border-radius: 12px 12px 0 0; text-align: center; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; background: #e94560;
+            color: white; font-size: 2rem; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 1rem; }
+        .info-row { padding: .85rem 0; border-bottom: 1px solid #f0f0f0; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: 600; color: #555; min-width: 150px; display: inline-block; }
+        .process-box { background: #f8f9fa; border-left: 4px solid #e94560;
+            padding: .9rem 1rem; border-radius: 4px; margin-top: 1rem; }
+        .amount-display { font-size: 2rem; font-weight: 700; color: #e94560; }
+        .badge-cash    { background-color: #28a745; }
+        .badge-card    { background-color: #0f3460; }
+        .badge-paid    { background-color: #28a745; }
+        .badge-pending { background-color: #fd7e14; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/payments"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/payments">Payments</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+            <div class="card" th:if="${payment}">
+
+                <!-- Profile Banner -->
+                <div class="profile-banner">
+                    <div class="avatar">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <!-- Amount display -->
+                    <div class="amount-display" th:text="${payment.formattedAmount}"></div>
+
+                    <!-- Payment type badge — Polymorphism: getPaymentTypeLabel() -->
+                    <span th:if="${payment.paymentType == 'cash'}"
+                          class="badge badge-cash me-2"
+                          th:text="${payment.paymentTypeLabel}"></span>
+                    <span th:unless="${payment.paymentType == 'cash'}"
+                          class="badge badge-card me-2"
+                          th:text="${payment.paymentTypeLabel}"></span>
+
+                    <!-- Status badge -->
+                    <span th:if="${payment.paymentStatus == 'paid'}"
+                          class="badge badge-paid">Paid</span>
+                    <span th:unless="${payment.paymentStatus == 'paid'}"
+                          class="badge badge-pending">Pending</span>
+
+                    <p class="mt-2 mb-0 opacity-75">
+                        <i class="bi bi-person me-1"></i>
+                        <span th:text="${payment.memberName}"></span>
+                    </p>
+                </div>
+
+                <!-- Detail Rows -->
+                <div class="card-body p-4">
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-hash me-1 text-danger"></i>Payment ID</span>
+                        <code th:text="${payment.paymentId}"></code>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-person me-1 text-danger"></i>Member ID</span>
+                        <span th:text="${payment.memberId}"></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-person-fill me-1 text-danger"></i>Member Name</span>
+                        <span th:text="${payment.memberName}"></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-calendar me-1 text-danger"></i>Payment Date</span>
+                        <span th:text="${payment.paymentDate}"></span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label"><i class="bi bi-cash me-1 text-danger"></i>Amount</span>
+                        <strong th:text="${payment.formattedAmount}"></strong>
+                    </div>
+
+                    <!--
+                      Polymorphism: processPayment() returns different processing info
+                      for CashPayment vs CardPayment
+                    -->
+                    <div class="process-box">
+                        <p class="small text-muted text-uppercase fw-bold mb-1">
+                            <i class="bi bi-gear me-1"></i>Payment Processing Info
+                        </p>
+                        <span th:text="${payment.processPayment()}"></span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-2 mt-4">
+                        <a th:href="@{/payments/{id}/edit(id=${payment.paymentId})}"
+                           class="btn btn-primary">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </a>
+                        <a href="/payments" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Back
+                        </a>
+                        <form th:action="@{/payments/{id}/delete(id=${payment.paymentId})}"
+                              method="post" class="ms-auto"
+                              onsubmit="return confirm('Delete this payment?');">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>
