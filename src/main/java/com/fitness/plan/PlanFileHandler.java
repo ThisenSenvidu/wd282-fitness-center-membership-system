@@ -13,26 +13,26 @@ public class PlanFileHandler {
     @Value("${app.plans.file-path}")
     private String filePath;
 
-@PostConstruct                                                    // run app and create a file if they not in folder
+    @PostConstruct                                                    // run app and create a file if they not in folder
     public void initFile() {
-    try {
-        File file = new File(filePath);
-        File dir = file.getParentFile();
-        if (dir !=null && !dir.exists()) dir.mkdirs();
-        if (!file.exists())
-            file.createNewFile();
-    } catch (IOException e){
-        System.out.println("Warning " + e.getMessage());
+        try {
+            File file = new File(filePath);
+            File dir = file.getParentFile();
+            if (dir != null && !dir.exists()) dir.mkdirs();
+            if (!file.exists())
+                file.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Warning " + e.getMessage());
+        }
     }
-}
 
-public void addPlan(MembershipPlan plan) throws IOException{                                                //create
-    String newID = generateId();
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-        writer.write(plan.toFileString());
-        writer.newLine();
+    public void addPlan(MembershipPlan plan) throws IOException {                                                //create
+        String newID = generateId();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(plan.toFileString());
+            writer.newLine();
+        }
     }
-}
 
     private String generateId() throws IOException {
         int nextNum = 3001 + getAllPlans().size();
@@ -40,38 +40,77 @@ public void addPlan(MembershipPlan plan) throws IOException{                    
     }
 
 
-public ArrayList<MembershipPlan> getAllPlans() throws IOException{                                        //read
-    ArrayList<MembershipPlan> list = new ArrayList<>();
-    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            line = line.trim();
-            if (!line.isEmpty()) {
-                MembershipPlan p = MembershipPlan.fromFileString(line);
-                if (p != null) list.add(p);
+    public ArrayList<MembershipPlan> getAllPlans() throws IOException {                                        //read
+        ArrayList<MembershipPlan> list = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    MembershipPlan p = MembershipPlan.fromFileString(line);
+                    if (p != null) list.add(p);
+                }
+            }
+        }
+        return list;
+    }
+
+    public MembershipPlan getPlanById(String planId) throws IOException {                      // get ID
+        for (MembershipPlan p : getAllPlans()) {
+            if (p.getPlanId().equals(planId)) return p;
+        }
+        return null;
+    }
+
+    public ArrayList<MembershipPlan> searchPlans(String keyword) throws IOException {            // search
+        ArrayList<MembershipPlan> results = new ArrayList<>();
+        String kw = keyword.toLowerCase().trim();
+        for (MembershipPlan p : getAllPlans()) {
+            if (p.getPlanName().toLowerCase().contains(kw) ||
+                    p.getDescription().toLowerCase().contains(kw)) {
+                results.add(p);
+            }
+        }
+        return results;
+    }
+
+    public boolean updatePlan(MembershipPlan updated) throws IOException {                                                        //update
+        ArrayList<MembershipPlan> all = getAllPlans();
+        boolean found = false;
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getPlanId().equals(updated.getPlanId())) {
+                all.set(i, updated);
+                found = true;
+                break;
+            }
+        }
+        if (found) writeAllToFile(all);
+        return found;
+    }
+
+    private void writeAllToFile(ArrayList<MembershipPlan> plans) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            for (MembershipPlan p : plans) {
+                writer.write(p.toFileString());
+                writer.newLine();
             }
         }
     }
-    return list;
-}
 
-public MembershipPlan getPlanById(String planId) throws IOException{
-    for (MembershipPlan p : getAllPlans()) {
-        if (p.getPlanID().equals(planId)) return p;
-    }
-    return null;
-}
 
-public ArrayList<MembershipPlan> searchPlans(String keyword) throws IOException{
-    ArrayList<MembershipPlan> results = new ArrayList<>();
-    String kw = keyword.toLowerCase().trim();
-    for (MembershipPlan p : getAllPlans()) {
-        if (p.getPlanName().toLowerCase().contains(kw) ||
-                p.getDescription().toLowerCase().contains(kw)) {
-            results.add(p);
+    public boolean deletePlan(String planId) throws IOException{                                                //delete
+        ArrayList<MembershipPlan> all = getAllPlans();
+        boolean found = false;
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getPlanId().equals(planId)) {
+                all.remove(i);
+                found = true;
+                break;
+            }
         }
+        if (found) writeAllToFile(all);
+        return found;
     }
-    return results;
-}
+
 
 }
