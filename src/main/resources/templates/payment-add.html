@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Record Payment – FitCenter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f5f5f5; }
+        .navbar { background: #1a1a2e; }
+        .navbar-brand { color: #e94560 !important; font-weight: 700; }
+        .nav-link { color: #bbb !important; }
+        .nav-link:hover { color: #e94560 !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        .card-header { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            color: white; border-radius: 12px 12px 0 0 !important; }
+        .form-control:focus, .form-select:focus {
+            border-color: #e94560; box-shadow: 0 0 0 .2rem rgba(233,69,96,.2);
+        }
+        .hint-box { background: #f0f4ff; border-left: 4px solid #0f3460;
+            padding: .8rem 1rem; border-radius: 4px; font-size: .9rem; }
+        .auto-filled { background: #e8f5e9 !important; border-color: #28a745 !important; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/payments"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/payments">Payments</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div th:if="${errorMsg}" class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${errorMsg}"></span>
+            </div>
+
+            <div class="card">
+                <div class="card-header p-3">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Record New Payment</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/payments/add}" method="post">
+
+                        <!-- Payment Type -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Payment Type *</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentType"
+                                           id="typeCash" value="cash" required>
+                                    <label class="form-check-label" for="typeCash">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Cash
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentType"
+                                           id="typeCard" value="card">
+                                    <label class="form-check-label" for="typeCard">
+                                        <i class="bi bi-credit-card-fill text-primary me-1"></i>Card
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
+                          Member Dropdown — connected to members.txt via MemberService.
+                          Selecting a member auto-fills the hidden memberId and memberName fields.
+                          If no members exist yet, falls back to manual text input.
+                        -->
+                        <div class="mb-3" th:if="${not #lists.isEmpty(members)}">
+                            <label class="form-label fw-bold">
+                                Select Member *
+                                <span class="badge bg-success ms-1" style="font-size:.7rem;">
+                  <i class="bi bi-link-45deg"></i> linked to members
+                </span>
+                            </label>
+                            <select class="form-select" id="memberDropdown"
+                                    onchange="fillMemberDetails(this)" required>
+                                <option value="" disabled selected>Choose a member...</option>
+                                <option th:each="m : ${members}"
+                                        th:value="${m.memberId}"
+                                        th:text="${m.memberId + '  —  ' + m.name}"
+                                        th:attr="data-name=${m.name},data-plan=${m.membershipPlan}">
+                                </option>
+                            </select>
+                            <!-- Hidden fields that get submitted -->
+                            <input type="hidden" name="memberId"   id="memberIdField">
+                            <input type="hidden" name="memberName" id="memberNameField">
+                        </div>
+
+                        <!-- Fallback: manual entry if members.txt is empty -->
+                        <div th:unless="${not #lists.isEmpty(members)}">
+                            <div class="hint-box mb-3">
+                                <i class="bi bi-info-circle me-1"></i>
+                                No members found. Register members first or enter details manually.
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Member ID *</label>
+                                <input type="text" class="form-control" name="memberId"
+                                       placeholder="e.g. MBR-2001" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Member Name *</label>
+                                <input type="text" class="form-control" name="memberName"
+                                       placeholder="e.g. Kavya Perera" required>
+                            </div>
+                        </div>
+
+                        <!--
+                          Plan Dropdown — connected to plans.txt via PlanService.
+                          Selecting a plan auto-fills the amount with the plan's calculated price.
+                        -->
+                        <div class="mb-3" th:if="${not #lists.isEmpty(plans)}">
+                            <label class="form-label fw-bold">
+                                Select Membership Plan
+                                <span class="badge bg-success ms-1" style="font-size:.7rem;">
+                  <i class="bi bi-link-45deg"></i> auto-fills amount
+                </span>
+                            </label>
+                            <select class="form-select" id="planDropdown"
+                                    onchange="fillPlanAmount(this)">
+                                <option value="" selected>Choose a plan (optional)...</option>
+                                <option th:each="p : ${plans}"
+                                        th:value="${p.planId}"
+                                        th:text="${p.planName + '  —  ' + p.formattedPrice}"
+                                        th:attr="data-price=${p.calculatePrice()}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Amount (Rs.) *</label>
+                            <input type="number" class="form-control" name="amount" id="amountField"
+                                   placeholder="e.g. 3500.00" step="0.01" min="0" required>
+                            <div class="form-text" id="amountHint"></div>
+                        </div>
+
+                        <!-- Payment Date -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Payment Date *</label>
+                            <input type="date" class="form-control" name="paymentDate" required>
+                        </div>
+
+                        <!-- Payment Status -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Payment Status *</label>
+                            <select class="form-select" name="paymentStatus" required>
+                                <option value="" disabled selected>Select status...</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="bi bi-check-lg me-1"></i>Record Payment
+                            </button>
+                            <a href="/payments" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-lg me-1"></i>Cancel
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Auto-fill member ID and name when a member is selected from the dropdown
+    function fillMemberDetails(select) {
+        const opt = select.options[select.selectedIndex];
+        document.getElementById('memberIdField').value   = opt.value;
+        document.getElementById('memberNameField').value = opt.dataset.name || '';
+    }
+
+    // Auto-fill the amount field when a plan is selected
+    function fillPlanAmount(select) {
+        const opt    = select.options[select.selectedIndex];
+        const price  = opt.dataset.price;
+        const field  = document.getElementById('amountField');
+        const hint   = document.getElementById('amountHint');
+
+        if (price && price !== '') {
+            field.value = parseFloat(price).toFixed(2);
+            field.classList.add('auto-filled');
+            hint.textContent = '✅ Amount auto-filled from selected plan. You can change it if needed.';
+            hint.style.color = '#28a745';
+        } else {
+            field.classList.remove('auto-filled');
+            hint.textContent = '';
+        }
+    }
+</script>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>
