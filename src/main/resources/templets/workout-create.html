@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Workout Program – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .card-header { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+                   color: white; border-radius: 12px 12px 0 0 !important; }
+    .form-control:focus, .form-select:focus {
+      border-color: #e94560; box-shadow: 0 0 0 .2rem rgba(233,69,96,.2);
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/workouts"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/workouts">Programs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <div th:if="${errorMsg}" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${errorMsg}"></span>
+      </div>
+
+      <div class="card">
+        <div class="card-header p-3">
+          <h5 class="mb-0">
+            <i class="bi bi-plus-circle me-2"></i>Create New Workout Program
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form th:action="@{/workouts/add}" method="post">
+
+            <!-- Program Type -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Program Type *</label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="programType"
+                         id="typeStrength" value="strength" required>
+                  <label class="form-check-label" for="typeStrength">
+                    <i class="bi bi-trophy-fill text-danger me-1"></i>Strength Training
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="programType"
+                         id="typeCardio" value="cardio">
+                  <label class="form-check-label" for="typeCardio">
+                    <i class="bi bi-heart-pulse-fill text-primary me-1"></i>Cardio Training
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Program Name -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Program Name *</label>
+              <input type="text" class="form-control" name="programName"
+                     placeholder="e.g. 12-Week Muscle Builder, Fat Burn Cardio" required>
+            </div>
+
+            <!-- Target Goal -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Target Goal *</label>
+              <input type="text" class="form-control" name="targetGoal"
+                     placeholder="e.g. Weight Loss, Muscle Gain, Fitness Maintenance" required>
+            </div>
+
+            <!-- Duration -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Duration (Weeks) *</label>
+              <input type="number" class="form-control" name="durationWeeks"
+                     placeholder="e.g. 4, 8, 12" min="1" required>
+            </div>
+
+            <!-- Difficulty Level -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">Difficulty Level *</label>
+              <select class="form-select" name="difficultyLevel" required>
+                <option value="" disabled selected>Select difficulty...</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+
+            <!-- Exercises -->
+            <div class="mb-4">
+              <label class="form-label fw-bold">Exercises *</label>
+              <textarea class="form-control" name="exercises" rows="3"
+                        placeholder="e.g. Squats, Bench Press, Deadlift, Pull-ups, Shoulder Press"
+                        required></textarea>
+              <div class="form-text">List the exercises included in this program.</div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-danger px-4">
+                <i class="bi bi-check-lg me-1"></i>Create Program
+              </button>
+              <a href="/workouts" class="btn btn-outline-secondary">
+                <i class="bi bi-x-lg me-1"></i>Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
