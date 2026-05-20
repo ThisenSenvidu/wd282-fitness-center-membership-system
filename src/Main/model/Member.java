@@ -95,7 +95,7 @@ public abstract class Member {
     public void   setJoinDate(String joinDate)     { this.joinDate = joinDate; }
 
     @Override
-    public String toString() {
+    public String toString() { // converts the object into readable text format//
         return "Member[id=" + memberId + ", name=" + name + ", plan=" + membershipPlan + "]";
     }
 }
