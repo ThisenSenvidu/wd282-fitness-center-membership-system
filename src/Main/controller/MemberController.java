@@ -1,5 +1,6 @@
 package com.fitness.fitnesstrainer.controller;
 
+//import classes//
 import com.fitness.fitnesstrainer.model.Member;
 import com.fitness.fitnesstrainer.plan.MembershipPlan;
 import com.fitness.fitnesstrainer.model.Trainer;
@@ -8,8 +9,8 @@ import com.fitness.fitnesstrainer.plan.PlanService;
 import com.fitness.fitnesstrainer.service.TrainerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;  //Imports all Spring web annotations//
+import org.springframework.web.servlet.mvc.support.RedirectAttributes; //Used to pass messages after redirects//
 import java.util.ArrayList;
 
 /**
@@ -27,14 +28,14 @@ import java.util.ArrayList;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final MemberService  memberService;
+    private final MemberService  memberService;    //Stores Memberservice object
     private final PlanService    planService;     // ← NEW connection
     private final TrainerService trainerService;  // ← NEW connection
 
     // Spring injects all three services automatically
     public MemberController(MemberService memberService,
                             PlanService planService,
-                            TrainerService trainerService) {
+                            TrainerService trainerService) { //Constructor for the controller
         this.memberService  = memberService;
         this.planService    = planService;
         this.trainerService = trainerService;
@@ -42,14 +43,14 @@ public class MemberController {
 
     // GET /members — show all members
     @GetMapping
-    public String listMembers(Model model) {
+    public String listMembers(Model model) { //Create a method to display all members//
         try {
-            ArrayList<Member> members = memberService.getAllMembers();
-            model.addAttribute("members", members);
+            ArrayList<Member> members = memberService.getAllMembers(); //Gets all members from service layer//
+            model.addAttribute("members", members); //Send all data to frontend//
         } catch (Exception e) {
             model.addAttribute("errorMsg", e.getMessage());
         }
-        return "member-list";
+        return "member-list"; //open memberlist html//
     }
 
     // GET /members/search?keyword=...
@@ -57,8 +58,8 @@ public class MemberController {
     public String searchMembers(@RequestParam(defaultValue = "") String keyword,
                                 Model model) {
         try {
-            model.addAttribute("members", memberService.searchMembers(keyword));
-            model.addAttribute("keyword", keyword);
+            model.addAttribute("members", memberService.searchMembers(keyword)); //Search the member using keyword//
+            model.addAttribute("keyword", keyword); //send keyword back to page//
         } catch (Exception e) {
             model.addAttribute("errorMsg", e.getMessage());
         }
@@ -67,14 +68,14 @@ public class MemberController {
 
     // GET /members/add — show register form WITH plan and trainer dropdowns
     @GetMapping("/add")
-    public String showAddForm(Model model) {
+    public String showAddForm(Model model) { //open member registration form//
         loadDropdownData(model);
-        return "member-register";
+        return "member-register"; //open member registration html//
     }
 
     // POST /members/add — save new member
-    @PostMapping("/add")
-    public String addMember(@RequestParam String name,
+    @PostMapping("/add") //Handles form submission
+    public String addMember(@RequestParam String name, //connects the form field values//
                             @RequestParam String email,
                             @RequestParam String phone,
                             @RequestParam String address,
@@ -83,7 +84,7 @@ public class MemberController {
                             Model model,
                             RedirectAttributes ra) {
 
-        if (isEmpty(name) || isEmpty(email) || isEmpty(phone) ||
+        if (isEmpty(name) || isEmpty(email) || isEmpty(phone) || //Check if any field is empty//
             isEmpty(address) || isEmpty(membershipPlan) || isEmpty(joinDate)) {
             model.addAttribute("errorMsg", "All fields are required.");
             loadDropdownData(model);
@@ -91,7 +92,7 @@ public class MemberController {
         }
 
         try {
-            memberService.addMember(name, email, phone, address, membershipPlan, joinDate);
+            memberService.addMember(name, email, phone, address, membershipPlan, joinDate); //save the member in service layer//
             ra.addFlashAttribute("successMsg", "Member registered successfully!");
             return "redirect:/members";
         } catch (Exception e) {
@@ -105,11 +106,11 @@ public class MemberController {
     @GetMapping("/{id}")
     public String viewMember(@PathVariable String id, Model model) {
         Member m = memberService.getMemberById(id);
-        if (m == null) {
+        if (m == null) { //Check if the member exsist//
             model.addAttribute("errorMsg", "Member not found.");
             return listMembers(model);
         }
-        model.addAttribute("member", m);
+        model.addAttribute("member", m); //send member object to frontend//
         return "member-profile";
     }
 
@@ -127,7 +128,7 @@ public class MemberController {
     }
 
     // POST /members/{id}/edit — save updated member
-    @PostMapping("/{id}/edit")
+    @PostMapping("/{id}/edit") 
     public String updateMember(@PathVariable String id,
                                @RequestParam String name,
                                @RequestParam String email,
@@ -141,7 +142,7 @@ public class MemberController {
         if (isEmpty(name) || isEmpty(email) || isEmpty(phone) ||
             isEmpty(address) || isEmpty(membershipPlan) || isEmpty(joinDate)) {
             model.addAttribute("errorMsg", "All fields are required.");
-            model.addAttribute("member", memberService.getMemberById(id));
+            model.addAttribute("member", memberService.getMemberById(id)); //search for a member using member id//
             loadDropdownData(model);
             return "member-update";
         }
@@ -173,7 +174,7 @@ public class MemberController {
     // Helper — loads plans and trainers for dropdowns
     private void loadDropdownData(Model model) {
         try {
-            ArrayList<MembershipPlan> plans = planService.getAllPlans();
+            ArrayList<MembershipPlan> plans = planService.getAllPlans(); //create a list to store membership plan objects//
             model.addAttribute("plans", plans);
         } catch (Exception e) {
             model.addAttribute("plans", new ArrayList<>());
@@ -187,6 +188,6 @@ public class MemberController {
     }
 
     private boolean isEmpty(String s) {
-        return s == null || s.trim().isEmpty();
+        return s == null || s.trim().isEmpty(); // check whether it is null,empty or space then return true//
     }
 }
