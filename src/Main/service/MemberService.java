@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Service
 public class MemberService {
 
-    private final MemberFileHandler fileHandler;
+    private final MemberFileHandler fileHandler; //stores memberfile handler object//
 
     public MemberService(MemberFileHandler fileHandler) {
         this.fileHandler = fileHandler;        // stores object in class variable//
