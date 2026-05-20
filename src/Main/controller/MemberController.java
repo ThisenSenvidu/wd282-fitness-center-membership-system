@@ -85,7 +85,7 @@ public class MemberController {
                             RedirectAttributes ra) {
 
         if (isEmpty(name) || isEmpty(email) || isEmpty(phone) || //Check if any field is empty//
-            isEmpty(address) || isEmpty(membershipPlan) || isEmpty(joinDate)) {
+            isEmpty(address) || isEmpty(membershipPlan) || isEmpty(joinDate)) { //Validation//
             model.addAttribute("errorMsg", "All fields are required.");
             loadDropdownData(model);
             return "member-register";
@@ -187,7 +187,7 @@ public class MemberController {
         }
     }
 
-    private boolean isEmpty(String s) {
+    private boolean isEmpty(String s) { //validation//
         return s == null || s.trim().isEmpty(); // check whether it is null,empty or space then return true//
     }
 }
