@@ -1,6 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
-// Inheritance: extends Trainer
+// Inheritance
 public class GroupTrainer extends Trainer {
 
     public GroupTrainer() {
@@ -8,12 +8,11 @@ public class GroupTrainer extends Trainer {
         setTrainerType("group");
     }
 
-    public GroupTrainer(String trainerId, String name, String email,
-                        String phone, String specialization, String availability) {
+    public GroupTrainer(String trainerId, String name, String email, String phone, String specialization, String availability) {
         super(trainerId, name, email, phone, specialization, availability, "group");
     }
 
-    // Polymorphism: different output from PersonalTrainer
+    // Polymorphism
     @Override
     public String getScheduleDescription() {
         return "Group Fitness Classes | " + getAvailability();
