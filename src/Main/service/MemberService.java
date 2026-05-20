@@ -16,7 +16,7 @@ public class MemberService {
     private final MemberFileHandler fileHandler;
 
     public MemberService(MemberFileHandler fileHandler) {
-        this.fileHandler = fileHandler;
+        this.fileHandler = fileHandler;        // stores object in class variable//
     }
 
     public ArrayList<Member> getAllMembers() {
