@@ -1,0 +1,2 @@
+PLN-3001|Monthly Basic|5000.0|1|Full Gym Access|basic
+PLN-3002|Monthly Basic|5000.0|1|Full Gym Access|premium

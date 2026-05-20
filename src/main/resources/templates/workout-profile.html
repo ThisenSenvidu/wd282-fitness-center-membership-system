@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Program Profile – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .profile-banner { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+                      color: white; padding: 2.5rem; border-radius: 12px 12px 0 0; text-align: center; }
+    .avatar { width: 80px; height: 80px; border-radius: 50%; background: #e94560;
+              color: white; font-size: 2rem; display: flex; align-items: center;
+              justify-content: center; margin: 0 auto 1rem; }
+    .info-row { padding: .85rem 0; border-bottom: 1px solid #f0f0f0; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-weight: 600; color: #555; min-width: 150px; display: inline-block; }
+    .details-box { background: #f8f9fa; border-left: 4px solid #e94560;
+                   padding: .9rem 1rem; border-radius: 4px; margin-top: 1rem; }
+    .exercises-box { background: #f0f4ff; border-left: 4px solid #0f3460;
+                     padding: .9rem 1rem; border-radius: 4px; margin-top: .8rem; }
+    .badge-strength { background-color: #e94560; }
+    .badge-cardio   { background-color: #0f3460; }
+    .badge-beginner     { background-color: #28a745; }
+    .badge-intermediate { background-color: #fd7e14; }
+    .badge-advanced     { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/workouts"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/workouts">Programs</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+
+      <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+      <div class="card" th:if="${program}">
+
+        <!-- Profile Banner -->
+        <div class="profile-banner">
+          <div class="avatar">
+            <i class="bi bi-activity"></i>
+          </div>
+          <h4 class="mb-2" th:text="${program.programName}"></h4>
+
+          <!-- Polymorphism: getProgramTypeLabel() returns different text per subclass -->
+          <span th:if="${program.programType == 'strength'}"
+                class="badge badge-strength me-2"
+                th:text="${program.programTypeLabel}"></span>
+          <span th:unless="${program.programType == 'strength'}"
+                class="badge badge-cardio me-2"
+                th:text="${program.programTypeLabel}"></span>
+
+          <!-- Difficulty badge -->
+          <span th:if="${program.difficultyLevel == 'beginner'}"
+                class="badge badge-beginner" th:text="${program.difficultyLevel}"></span>
+          <span th:if="${program.difficultyLevel == 'intermediate'}"
+                class="badge badge-intermediate" th:text="${program.difficultyLevel}"></span>
+          <span th:if="${program.difficultyLevel == 'advanced'}"
+                class="badge badge-advanced" th:text="${program.difficultyLevel}"></span>
+
+          <p class="mt-2 mb-0 opacity-75">
+            <i class="bi bi-bullseye me-1"></i>
+            <span th:text="${program.targetGoal}"></span>
+          </p>
+        </div>
+
+        <!-- Detail Rows -->
+        <div class="card-body p-4">
+
+          <div class="info-row">
+            <span class="info-label"><i class="bi bi-hash me-1 text-danger"></i>Program ID</span>
+            <code th:text="${program.programId}"></code>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label"><i class="bi bi-bullseye me-1 text-danger"></i>Target Goal</span>
+            <span th:text="${program.targetGoal}"></span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label"><i class="bi bi-calendar-week me-1 text-danger"></i>Duration</span>
+            <span th:text="${program.durationWeeks + ' weeks'}"></span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label"><i class="bi bi-bar-chart me-1 text-danger"></i>Difficulty</span>
+            <span th:text="${program.difficultyLevel}"></span>
+          </div>
+
+          <!--
+            Polymorphism: getProgramDetails() returns different text
+            for StrengthProgram vs CardioProgram
+          -->
+          <div class="details-box">
+            <p class="small text-muted text-uppercase fw-bold mb-1">
+              <i class="bi bi-info-circle me-1"></i>Program Details
+            </p>
+            <span th:text="${program.programDetails}"></span>
+          </div>
+
+          <!-- Exercises -->
+          <div class="exercises-box">
+            <p class="small text-muted text-uppercase fw-bold mb-1">
+              <i class="bi bi-list-check me-1"></i>Exercises
+            </p>
+            <span th:text="${program.exercises}"></span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2 mt-4">
+            <a th:href="@{/workouts/{id}/edit(id=${program.programId})}"
+               class="btn btn-primary">
+              <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+            <a href="/workouts" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+            <form th:action="@{/workouts/{id}/delete(id=${program.programId})}"
+                  method="post" class="ms-auto"
+                  onsubmit="return confirm('Delete this program?');">
+              <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-trash me-1"></i>Delete
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

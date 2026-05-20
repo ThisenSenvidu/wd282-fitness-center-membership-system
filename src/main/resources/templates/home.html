@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitCenter – Fit Center </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+
+    /* ── Base ─────────────────────────────────────────────── */
+    body {
+      background: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ───────────────────────────────────────────── */
+    .navbar { background: #1a1a2e; padding: .75rem 2rem; }
+    .navbar-brand {
+      color: white !important; font-weight: 800;
+      font-size: 1.3rem; letter-spacing: -.3px;
+    }
+    .navbar-brand span { color: #e94560; }
+    .nav-link { color: rgba(255,255,255,.65) !important; font-size: .9rem; }
+    .nav-link:hover { color: #e94560 !important; }
+    .nav-link.active { color: white !important; }
+    .btn-admin {
+      background: #e94560; color: white !important;
+      border-radius: 20px; padding: .35rem 1rem;
+      font-size: .85rem; font-weight: 600;
+    }
+    .btn-admin:hover { background: #c73652; }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      color: white; padding: 4rem 2rem 5rem;
+      text-align: center;
+    }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: .5rem; }
+    .hero p  { font-size: 1.05rem; opacity: .7; max-width: 500px; margin: 0 auto 2rem; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(233,69,96,.2); border: 1px solid rgba(233,69,96,.5);
+      color: #ff8fa3; font-size: .8rem; font-weight: 600;
+      padding: .25rem .9rem; border-radius: 20px; margin-bottom: 1rem;
+    }
+
+    /* ── Stats strip ──────────────────────────────────────── */
+    .stats-strip {
+      display: flex; justify-content: center; gap: 1rem;
+      flex-wrap: wrap; margin-top: -2rem; padding: 0 1.5rem 2rem;
+    }
+    .stat-pill {
+      background: white; border-radius: 50px;
+      padding: .55rem 1.4rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .88rem; font-weight: 600; color: #1a1a2e;
+      text-decoration: none; transition: transform .15s, box-shadow .15s;
+    }
+    .stat-pill:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0,0,0,.16);
+      color: #1a1a2e;
+    }
+    .stat-pill i { font-size: 1rem; }
+    .stat-pill .num { font-size: 1.1rem; font-weight: 800; }
+
+    /* ── Section ──────────────────────────────────────────── */
+    .section { padding: 2.5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #aaa; margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: #e5e5e5;
+    }
+
+    /* ── Module cards ─────────────────────────────────────── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+    .mod-card {
+      background: white; border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .mod-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.13);
+      color: inherit;
+    }
+    .mod-top {
+      padding: 1.4rem 1.4rem 1rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .mod-icon {
+      width: 50px; height: 50px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.45rem; color: white; flex-shrink: 0;
+    }
+    .mod-info h6 {
+      font-weight: 700; font-size: .95rem;
+      color: #1a1a2e; margin: 0 0 .25rem;
+    }
+    .mod-info p {
+      font-size: .8rem; color: #888; margin: 0; line-height: 1.4;
+    }
+    .mod-links {
+      display: flex; border-top: 1px solid #f3f3f3;
+    }
+    .mod-link {
+      flex: 1; text-align: center;
+      padding: .65rem .4rem;
+      font-size: .8rem; font-weight: 600; color: #555;
+      text-decoration: none;
+      border-right: 1px solid #f3f3f3;
+      transition: background .15s, color .15s;
+      display: flex; align-items: center; justify-content: center; gap: .3rem;
+    }
+    .mod-link:last-child { border-right: none; }
+    .mod-link:hover { background: #f8f9fa; color: #1a1a2e; }
+    .mod-link.add { color: #e94560; }
+    .mod-link.add:hover { background: #fff5f7; }
+
+    /* ── Admin card (special full-width style) ────────────── */
+    .admin-card {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      border-radius: 14px; padding: 1.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+    .admin-card-left { display: flex; align-items: center; gap: 1.1rem; }
+    .admin-icon {
+      width: 55px; height: 55px; border-radius: 14px;
+      background: rgba(233,69,96,.3); border: 2px solid rgba(233,69,96,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color: #e94560;
+    }
+    .admin-card h5 { color: white; font-weight: 700; margin: 0 0 .2rem; }
+    .admin-card p  { color: rgba(255,255,255,.55); font-size: .85rem; margin: 0; }
+    .admin-btns { display: flex; gap: .7rem; flex-wrap: wrap; }
+    .btn-admin-login {
+      background: #e94560; color: white; border: none;
+      padding: .55rem 1.4rem; border-radius: 8px;
+      font-weight: 600; font-size: .88rem;
+      text-decoration: none;
+      display: flex; align-items: center; gap: .4rem;
+      transition: background .15s;
+    }
+    .btn-admin-login:hover { background: #c73652; color: white; }
+    .btn-admin-outline {
+      background: transparent; color: white;
+      border: 1px solid rgba(255,255,255,.25);
+      padding: .55rem 1.4rem; border-radius: 8px;
+      font-weight: 600; font-size: .88rem;
+      text-decoration: none;
+      display: flex; align-items: center; gap: .4rem;
+      transition: background .15s;
+    }
+    .btn-admin-outline:hover { background: rgba(255,255,255,.1); color: white; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      text-align: center; padding: 1.5rem;
+      font-size: .8rem; color: #aaa; border-top: 1px solid #e8e8e8;
+      background: white; margin-top: 1rem;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .modules-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero h1 { font-size: 1.8rem; }
+    }
+    @media (max-width: 580px) {
+      .modules-grid { grid-template-columns: 1fr; }
+      .stats-strip  { flex-direction: column; align-items: center; }
+      .hero { padding: 3rem 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <i class="bi bi-lightning-charge-fill" style="color:#e94560;"></i>
+      <span>Fit</span>Center
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navMenu" style="border-color:rgba(255,255,255,.2);">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/members">Members</a></li>
+        <li class="nav-item"><a class="nav-link" href="/trainers">Trainers</a></li>
+        <li class="nav-item"><a class="nav-link" href="/plans">Plans</a></li>
+        <li class="nav-item"><a class="nav-link" href="/payments">Payments</a></li>
+        <li class="nav-item"><a class="nav-link" href="/workouts">Workouts</a></li>
+        <li class="nav-item ms-2">
+          <a class="nav-link btn-admin" href="/admin/login">
+            <i class="bi bi-shield-lock-fill me-1"></i>Admin
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-badge"></div>
+  <h1>Fit Center<br></h1>
+  <p>Manage members, trainers, workout programs, membership plans and payments all in one place.</p>
+  <a href="/members/add" class="btn btn-danger btn-lg me-2 px-4">
+    <i class="bi bi-person-plus-fill me-2"></i>Register Member
+  </a>
+  <a href="/admin/login" class="btn btn-outline-light btn-lg px-4">
+    <i class="bi bi-shield-lock-fill me-2"></i>Admin Login
+  </a>
+</div>
+
+<!-- ── Stats Pills ──────────────────────────────────────────── -->
+<div class="stats-strip">
+  <a href="/members" class="stat-pill">
+    <i class="bi bi-people-fill" style="color:#e94560;"></i>
+    <span class="num" th:text="${totalMembers}">0</span>
+    Members
+  </a>
+  <a href="/trainers" class="stat-pill">
+    <i class="bi bi-person-badge-fill" style="color:#0f3460;"></i>
+    <span class="num" th:text="${totalTrainers}">0</span>
+    Trainers
+  </a>
+  <a href="/plans" class="stat-pill">
+    <i class="bi bi-card-checklist" style="color:#6f42c1;"></i>
+    <span class="num" th:text="${totalPlans}">0</span>
+    Plans
+  </a>
+  <a href="/payments" class="stat-pill">
+    <i class="bi bi-credit-card-fill" style="color:#fd7e14;"></i>
+    <span class="num" th:text="${totalPayments}">0</span>
+    Payments
+  </a>
+  <a href="/workouts" class="stat-pill">
+    <i class="bi bi-activity" style="color:#17a2b8;"></i>
+    <span class="num" th:text="${totalWorkouts}">0</span>
+    Programs
+  </a>
+</div>
+
+<!-- ── Main Section ─────────────────────────────────────────── -->
+<div class="section">
+
+  <!-- Modules -->
+  <div class="section-label">System Modules</div>
+  <div class="modules-grid">
+
+    <!-- Members -->
+    <div class="mod-card">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#e94560;">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Member Management</h6>
+          <p>Register and manage gym members. Supports Regular and Premium membership types.</p>
+        </div>
+      </div>
+      <div class="mod-links">
+        <a href="/members/add" class="mod-link add">
+          <i class="bi bi-plus-lg"></i> Add Member
+        </a>
+        <a href="/members" class="mod-link">
+          <i class="bi bi-search"></i> Search
+        </a>
+        <a href="/members" class="mod-link">
+          <i class="bi bi-list-ul"></i> View All
+        </a>
+      </div>
+    </div>
+
+    <!-- Trainers -->
+    <div class="mod-card">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#0f3460;">
+          <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Trainer Management</h6>
+          <p>Manage Personal and Group trainers. View specializations and available schedules.</p>
+        </div>
+      </div>
+      <div class="mod-links">
+        <a href="/trainers/add" class="mod-link add">
+          <i class="bi bi-plus-lg"></i> Add Trainer
+        </a>
+        <a href="/trainers" class="mod-link">
+          <i class="bi bi-search"></i> Search
+        </a>
+        <a href="/trainers" class="mod-link">
+          <i class="bi bi-list-ul"></i> View All
+        </a>
+      </div>
+    </div>
+
+    <!-- Membership Plans -->
+    <div class="mod-card">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#6f42c1;">
+          <i class="bi bi-card-checklist"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Membership Plans</h6>
+          <p>Create Basic and Premium plans. Premium plans get a 10% discount automatically.</p>
+        </div>
+      </div>
+      <div class="mod-links">
+        <a href="/plans/add" class="mod-link add">
+          <i class="bi bi-plus-lg"></i> Add Plan
+        </a>
+        <a href="/plans" class="mod-link">
+          <i class="bi bi-search"></i> Search
+        </a>
+        <a href="/plans" class="mod-link">
+          <i class="bi bi-list-ul"></i> View All
+        </a>
+      </div>
+    </div>
+
+    <!-- Payments -->
+    <div class="mod-card">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#fd7e14;">
+          <i class="bi bi-credit-card-fill"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Payment Management</h6>
+          <p>Record Cash and Card payments. Select a member from dropdown — amount auto-fills.</p>
+        </div>
+      </div>
+      <div class="mod-links">
+        <a href="/payments/add" class="mod-link add">
+          <i class="bi bi-plus-lg"></i> Record Payment
+        </a>
+        <a href="/payments" class="mod-link">
+          <i class="bi bi-search"></i> Search
+        </a>
+        <a href="/payments" class="mod-link">
+          <i class="bi bi-list-ul"></i> View All
+        </a>
+      </div>
+    </div>
+
+    <!-- Workout Programs -->
+    <div class="mod-card">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#17a2b8;">
+          <i class="bi bi-activity"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Workout Programs</h6>
+          <p>Create Strength and Cardio programs with difficulty levels, goals and exercises.</p>
+        </div>
+      </div>
+      <div class="mod-links">
+        <a href="/workouts/add" class="mod-link add">
+          <i class="bi bi-plus-lg"></i> Add Program
+        </a>
+        <a href="/workouts" class="mod-link">
+          <i class="bi bi-search"></i> Search
+        </a>
+        <a href="/workouts" class="mod-link">
+          <i class="bi bi-list-ul"></i> View All
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Links card -->
+    <div class="mod-card" style="background:#f8f9fa;">
+      <div class="mod-top">
+        <div class="mod-icon" style="background:#28a745;">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <div class="mod-info">
+          <h6>Quick Actions</h6>
+          <p>Jump straight to the most common tasks without navigating through the menus.</p>
+        </div>
+      </div>
+      <div class="mod-links" style="flex-direction:column; border-top:1px solid #eee;">
+        <a href="/members/add"  class="mod-link" style="border-right:none; border-bottom:1px solid #f3f3f3; justify-content:flex-start; padding-left:1.2rem;">
+          <i class="bi bi-person-plus text-danger me-2"></i> Register a new member
+        </a>
+        <a href="/payments/add" class="mod-link" style="border-right:none; border-bottom:1px solid #f3f3f3; justify-content:flex-start; padding-left:1.2rem;">
+          <i class="bi bi-cash-coin text-warning me-2"></i> Record a payment
+        </a>
+        <a href="/trainers/add" class="mod-link" style="border-right:none; justify-content:flex-start; padding-left:1.2rem;">
+          <i class="bi bi-person-badge text-primary me-2"></i> Add a new trainer
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Admin Card -->
+  <div class="section-label">Administration</div>
+  <div class="admin-card mb-4">
+    <div class="admin-card-left">
+      <div class="admin-icon">
+        <i class="bi bi-shield-lock-fill"></i>
+      </div>
+      <div>
+        <h5>Admin Management Panel</h5>
+        <p>Login to access the dashboard, view system overview, manage admin accounts and read activity logs.</p>
+      </div>
+    </div>
+    <div class="admin-btns">
+      <a href="/admin/login" class="btn-admin-login">
+        <i class="bi bi-box-arrow-in-right"></i> Admin Login
+      </a>
+      <a href="/admin/overview" class="btn-admin-outline">
+        <i class="bi bi-bar-chart"></i> System Overview
+      </a>
+    </div>
+  </div>
+
+</div><!-- end section -->
+
+<!-- ── Footer ───────────────────────────────────────────────── -->
+<div class="footer">
+  ⚡ FitCenter Management System
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

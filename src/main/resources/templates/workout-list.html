@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Programs – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .nav-link:hover { color: #e94560 !important; }
+    .banner { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+              color: white; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .table thead th { background: #1a1a2e; color: white; }
+    .badge-strength { background-color: #e94560; }
+    .badge-cardio   { background-color: #0f3460; }
+    .badge-beginner     { background-color: #28a745; }
+    .badge-intermediate { background-color: #fd7e14; }
+    .badge-advanced     { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+      <a class="navbar-brand" href="/home"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+      <i class="bi bi-lightning-charge-fill"></i> FitCenter
+    </a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/workouts"><i class="bi bi-activity me-1"></i>Programs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/workouts/add"><i class="bi bi-plus-circle me-1"></i>Add Program</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <!-- Banner -->
+  <div class="banner d-flex justify-content-between align-items-center">
+    <div>
+      <h3 class="mb-1"><i class="bi bi-activity me-2"></i>Workout Program Management</h3>
+      <p class="mb-0 opacity-75">Create, view, update and delete workout programs.</p>
+    </div>
+    <a href="/workouts/add" class="btn btn-danger">
+      <i class="bi bi-plus-lg me-1"></i>Add Program
+    </a>
+  </div>
+
+  <!-- Flash messages -->
+  <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show mt-3">
+    <i class="bi bi-check-circle me-2"></i>
+    <span th:text="${successMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show mt-3">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <span th:text="${errorMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form action="/workouts/search" method="get">
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control" name="keyword"
+                 placeholder="Search by program name or target goal..."
+                 th:value="${keyword}">
+          <button class="btn btn-dark" type="submit">Search</button>
+          <a class="btn btn-outline-secondary" href="/workouts">Reset</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Programs Table -->
+  <div class="card">
+    <div class="card-body p-0">
+
+      <div th:if="${#lists.isEmpty(programs)}" class="text-center py-5">
+        <i class="bi bi-activity display-3 text-muted"></i>
+        <p class="mt-2 text-muted">No workout programs found.</p>
+        <a href="/workouts/add" class="btn btn-dark">Add First Program</a>
+      </div>
+
+      <div th:unless="${#lists.isEmpty(programs)}">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Program Name</th>
+                <th>Type</th>
+                <th>Target Goal</th>
+                <th>Duration</th>
+                <th>Difficulty</th>
+                <th>Details</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="p : ${programs}">
+                <td><code th:text="${p.programId}"></code></td>
+                <td><strong th:text="${p.programName}"></strong></td>
+                <td>
+                  <!-- Polymorphism: getProgramTypeLabel() returns different text per subclass -->
+                  <span th:if="${p.programType == 'strength'}"
+                        class="badge badge-strength"
+                        th:text="${p.programTypeLabel}"></span>
+                  <span th:unless="${p.programType == 'strength'}"
+                        class="badge badge-cardio"
+                        th:text="${p.programTypeLabel}"></span>
+                </td>
+                <td th:text="${p.targetGoal}"></td>
+                <td th:text="${p.durationWeeks + ' weeks'}"></td>
+                <td>
+                  <span th:if="${p.difficultyLevel == 'beginner'}"
+                        class="badge badge-beginner" th:text="${p.difficultyLevel}"></span>
+                  <span th:if="${p.difficultyLevel == 'intermediate'}"
+                        class="badge badge-intermediate" th:text="${p.difficultyLevel}"></span>
+                  <span th:if="${p.difficultyLevel == 'advanced'}"
+                        class="badge badge-advanced" th:text="${p.difficultyLevel}"></span>
+                </td>
+                <!--
+                  Polymorphism: getProgramDetails() returns different text
+                  for StrengthProgram vs CardioProgram
+                -->
+                <td>
+                  <small class="text-muted" th:text="${p.programDetails}"></small>
+                </td>
+                <td class="text-center">
+                  <a th:href="@{/workouts/{id}(id=${p.programId})}"
+                     class="btn btn-sm btn-outline-secondary me-1" title="View">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                  <a th:href="@{/workouts/{id}/edit(id=${p.programId})}"
+                     class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <form th:action="@{/workouts/{id}/delete(id=${p.programId})}"
+                        method="post" class="d-inline"
+                        th:attr="onsubmit=|return confirm('Delete ${p.programName}?')|">
+                    <button class="btn btn-sm btn-outline-danger" title="Delete">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer text-muted small">
+          Total: <strong th:text="${#lists.size(programs)}"></strong> program(s)
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

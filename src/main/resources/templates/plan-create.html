@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Plan – FitCenter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f5f5f5; }
+    .navbar { background: #1a1a2e; }
+    .navbar-brand { color: #e94560 !important; font-weight: 700; }
+    .nav-link { color: #bbb !important; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .card-header { background: linear-gradient(135deg, #1a1a2e, #0f3460);
+                   color: white; border-radius: 12px 12px 0 0 !important; }
+    .form-control:focus { border-color: #e94560; box-shadow: 0 0 0 .2rem rgba(233,69,96,.2); }
+    .hint-box { background: #f0f4ff; border-left: 4px solid #0f3460;
+                padding: .8rem 1rem; border-radius: 4px; font-size: .9rem; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/plans"><i class="bi bi-lightning-charge-fill"></i> FitCenter</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" href="/plans">Plans</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container pb-5"><div class="row justify-content-center"><div class="col-lg-7">
+
+  <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+  <div class="card">
+    <div class="card-header p-3">
+      <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Create New Membership Plan</h5>
+    </div>
+    <div class="card-body p-4">
+      <form th:action="@{/plans/add}" method="post">
+
+        <!-- Plan Type -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">Plan Type *</label>
+          <div class="d-flex gap-4">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="planType"
+                     id="typeBasic" value="basic" required>
+              <label class="form-check-label" for="typeBasic">
+                <i class="bi bi-tag text-primary me-1"></i>Basic
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="planType"
+                     id="typePremium" value="premium">
+              <label class="form-check-label" for="typePremium">
+                <i class="bi bi-star-fill text-danger me-1"></i>Premium (10% discount applied)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Plan Name *</label>
+          <input type="text" class="form-control" name="planName"
+                 placeholder="e.g. Monthly Basic, Annual Premium" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Base Price (Rs.) *</label>
+          <input type="number" class="form-control" name="price"
+                 placeholder="e.g. 3500.00" step="0.01" min="0" required>
+          <div class="form-text">For Premium plans, a 10% discount will be applied automatically.</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Duration (Months) *</label>
+          <input type="number" class="form-control" name="durationMonths"
+                 placeholder="e.g. 1, 3, 6, 12" min="1" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold">Description *</label>
+          <textarea class="form-control" name="description" rows="3"
+                    placeholder="e.g. Full gym access, group classes, locker room..."></textarea>
+        </div>
+
+        <div class="hint-box mb-4">
+          <i class="bi bi-info-circle me-2 text-primary"></i>
+          <strong>Basic Plan:</strong> Standard price. &nbsp;|&nbsp;
+          <strong>Premium Plan:</strong> 10% loyalty discount automatically applied on the base price.
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-danger px-4">Create Plan</button>
+          <a href="/plans" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
