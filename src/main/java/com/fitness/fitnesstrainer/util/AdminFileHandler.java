@@ -9,17 +9,7 @@ import jakarta.annotation.PostConstruct;
 import java.io.*;
 import java.util.ArrayList;
 
-/**
- * AdminFileHandler.java — Handles all file I/O for admins.txt
- *
- * OOP / Lecture concepts:
- *   Exception Handling  — try-catch on all file operations, throws IOException
- *   Collections         — ArrayList<Admin>
- *   Generics            — ArrayList<Admin>
- *   String manipulation — split(), trim(), toLowerCase(), contains(), String.format()
- *   Encapsulation       — private helper methods hide implementation details
- *   Static Modifier     — @Component makes this a Spring-managed singleton bean
- */
+
 @Component
 public class AdminFileHandler {
 

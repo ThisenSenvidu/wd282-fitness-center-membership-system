@@ -1,14 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
-/**
- * RegularAdmin.java — Subclass of Admin with limited access.
- *
- * OOP Concepts:
- *   Inheritance       — extends Admin
- *   Polymorphism      — overrides getAdminPermissions() and getAdminTypeLabel()
- *                       RegularAdmin has restricted access compared to SuperAdmin
- *   Constructor Chain — calls super() to reuse parent constructor
- */
+
 public class RegularAdmin extends Admin {
 
     public RegularAdmin() {

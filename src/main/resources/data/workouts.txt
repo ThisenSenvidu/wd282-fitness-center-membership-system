@@ -1,0 +1,2 @@
+aWKT-5001|Muscle Builder|Muscle gain, fitness maintainance|2|Squats, Pull ups|beginner|strength
+WKT-5002|cardio2|loss2|2|ttt|beginner|cardio

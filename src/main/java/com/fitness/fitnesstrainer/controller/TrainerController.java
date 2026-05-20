@@ -18,7 +18,7 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
-    // show all trainers
+    // GET /trainers — show all trainers
     @GetMapping
     public String listTrainers(Model model) {
         try {
@@ -30,7 +30,7 @@ public class TrainerController {
         return "trainer-list";
     }
 
-    // search?keyword=yoga
+    // GET /trainers/search?keyword=yoga
     @GetMapping("/search")
     public String searchTrainers(@RequestParam(defaultValue="") String keyword, Model model) {
         try {
@@ -42,34 +42,21 @@ public class TrainerController {
         return "trainer-list";
     }
 
-    // show registration form
+    // GET /trainers/add — show registration form
     @GetMapping("/add")
     public String showAddForm() { return "trainer-register"; }
 
-    // save new trainer
+    // POST /trainers/add — save new trainer
     @PostMapping("/add")
-    public String addTrainer(@RequestParam String name, @RequestParam String email, @RequestParam String phone, @RequestParam String specialization,
-                             @RequestParam String availability, @RequestParam String trainerType, Model model, RedirectAttributes ra) {
-
-        // 1. Check required fields
-        if (isEmpty(name) || isEmpty(email) || isEmpty(phone) || isEmpty(specialization) || isEmpty(availability) || isEmpty(trainerType)) {
-
-            model.addAttribute("errorMsg", "All fields are required.");
+    public String addTrainer(@RequestParam String name, @RequestParam String email,
+                             @RequestParam String phone, @RequestParam String specialization,
+                             @RequestParam String availability, @RequestParam String trainerType,
+                             Model model, RedirectAttributes ra) {
+        if (isEmpty(name)||isEmpty(email)||isEmpty(phone)||
+                isEmpty(specialization)||isEmpty(availability)||isEmpty(trainerType)) {
+            model.addAttribute("errorMsg","All fields are required.");
             return "trainer-register";
         }
-
-        // 2. Email validation
-        if (!email.contains("@")) {
-            model.addAttribute("errorMsg", "Invalid email format.");
-            return "trainer-register";
-        }
-
-        // 3. Phone validation
-        if (phone.length() != 10) {
-            model.addAttribute("errorMsg", "Phone must be 10 digits.");
-            return "trainer-register";
-        }
-
         try {
             trainerService.addTrainer(name,email,phone,specialization,availability,trainerType);
             ra.addFlashAttribute("successMsg","Trainer registered successfully!");
@@ -80,7 +67,7 @@ public class TrainerController {
         }
     }
 
-    // view profile
+    // GET /trainers/{id} — view profile
     @GetMapping("/{id}")
     public String viewTrainer(@PathVariable String id, Model model) {
         Trainer t = trainerService.getTrainerById(id);
@@ -89,7 +76,7 @@ public class TrainerController {
         return "trainer-profile";
     }
 
-    // show update form
+    // GET /trainers/{id}/edit — show update form
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
         Trainer t = trainerService.getTrainerById(id);
@@ -98,13 +85,15 @@ public class TrainerController {
         return "trainer-update";
     }
 
-    // save updated trainer
+    // POST /trainers/{id}/edit — save updated trainer
     @PostMapping("/{id}/edit")
-    public String updateTrainer(@PathVariable String id, @RequestParam String name, @RequestParam String email, @RequestParam String phone,
-                                @RequestParam String specialization, @RequestParam String availability, @RequestParam String trainerType,
+    public String updateTrainer(@PathVariable String id,
+                                @RequestParam String name, @RequestParam String email,
+                                @RequestParam String phone, @RequestParam String specialization,
+                                @RequestParam String availability, @RequestParam String trainerType,
                                 Model model, RedirectAttributes ra) {
-
-        if (isEmpty(name)||isEmpty(email)||isEmpty(phone)|| isEmpty(specialization)||isEmpty(availability)||isEmpty(trainerType)) {
+        if (isEmpty(name)||isEmpty(email)||isEmpty(phone)||
+                isEmpty(specialization)||isEmpty(availability)||isEmpty(trainerType)) {
             model.addAttribute("errorMsg","All fields are required.");
             model.addAttribute("trainer", trainerService.getTrainerById(id));
             return "trainer-update";
@@ -117,7 +106,7 @@ public class TrainerController {
         return "redirect:/trainers";
     }
 
-    // delete trainer
+    // POST /trainers/{id}/delete — delete trainer
     @PostMapping("/{id}/delete")
     public String deleteTrainer(@PathVariable String id, RedirectAttributes ra) {
         try {

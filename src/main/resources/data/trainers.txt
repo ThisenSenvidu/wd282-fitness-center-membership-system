@@ -1,3 +1,2 @@
 TRN-1001 | Sandy | 123456789@gmail.com | 0912345678 | Yoga | Mon 6PM-9PM | personal
 TRN-1002 | Mandy | 987654321@gmail.com | 0919876543 | Yoga | TUE 6PM-9PM | group
-TRN-1003 | Nancy | 456729132@gmail.com | 0918765432 | Strength Training | WED 6PM-9PM | personal

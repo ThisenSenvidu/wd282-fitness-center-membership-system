@@ -1,14 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
-/**
- * SuperAdmin.java — Subclass of Admin with full system access.
- *
- * OOP Concepts:
- *   Inheritance       — extends Admin
- *   Polymorphism      — overrides getAdminPermissions() and getAdminTypeLabel()
- *                       SuperAdmin has full access to everything
- *   Constructor Chain — calls super() to reuse parent constructor
- */
+
 public class SuperAdmin extends Admin {
 
     public SuperAdmin() {

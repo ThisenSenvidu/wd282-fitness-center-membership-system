@@ -1,16 +1,6 @@
 package com.fitness.fitnesstrainer.model;
 
-/**
- * Admin.java — Abstract base class for all admin account types.
- *
- * OOP Concepts:
- *   Encapsulation      — private fields with getters/setters
- *   Abstract Class     — cannot be instantiated directly
- *   Abstraction        — abstract method getAdminPermissions() forces subclasses
- *                        to define what access level they have
- *   Constructor Chain  — no-arg constructor calls full constructor via this()
- *   Static Modifier    — adminCount tracks total objects created
- */
+
 public abstract class Admin {
 
     private String adminId;

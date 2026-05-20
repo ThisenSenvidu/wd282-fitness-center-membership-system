@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FitnessTrainerApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(FitnessTrainerApplication.class, args);
     }
 }

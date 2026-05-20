@@ -15,7 +15,7 @@ public class TrainerFileHandler {
     @Value("${app.data.file-path}")
     private String filePath;
 
-    //creates the folder and file if they don't exist
+    // Runs once at startup — creates the folder and file if they don't exist
     @PostConstruct
     public void initFile() {
         try {
@@ -23,13 +23,12 @@ public class TrainerFileHandler {
             File dir  = file.getParentFile();
             if (dir != null && !dir.exists()) dir.mkdirs();
             if (!file.exists())               file.createNewFile();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Warning: " + e.getMessage());
         }
     }
 
-    //append one new line to trainers.txt
+    // CREATE — append one new line to trainers.txt
     public void addTrainer(Trainer trainer) throws IOException {
         String newId = generateId();
         trainer.setTrainerId(newId);
@@ -39,7 +38,7 @@ public class TrainerFileHandler {
         }
     }
 
-    // return all trainers as ArrayList
+    // READ — return all trainers as ArrayList
     public ArrayList<Trainer> getAllTrainers() throws IOException {
         ArrayList<Trainer> list = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -55,7 +54,7 @@ public class TrainerFileHandler {
         return list;
     }
 
-    //find one trainer by ID
+    // READ — find one trainer by ID
     public Trainer getTrainerById(String trainerId) throws IOException {
         for (Trainer t : getAllTrainers()) {
             if (t.getTrainerId().equals(trainerId)) return t;
@@ -63,19 +62,20 @@ public class TrainerFileHandler {
         return null;
     }
 
-    // filter by name or specialization
+    // SEARCH — filter by name or specialization
     public ArrayList<Trainer> searchTrainers(String keyword) throws IOException {
         ArrayList<Trainer> results = new ArrayList<>();
         String kw = keyword.toLowerCase().trim();
         for (Trainer t : getAllTrainers()) {
-            if (t.getName().toLowerCase().contains(kw) || t.getSpecialization().toLowerCase().contains(kw)) {
+            if (t.getName().toLowerCase().contains(kw) ||
+                    t.getSpecialization().toLowerCase().contains(kw)) {
                 results.add(t);
             }
         }
         return results;
     }
 
-    // find matching trainer, replace it, rewrite file
+    // UPDATE — find matching trainer, replace it, rewrite file
     public boolean updateTrainer(Trainer updated) throws IOException {
         ArrayList<Trainer> all = getAllTrainers();
         boolean found = false;
@@ -90,7 +90,7 @@ public class TrainerFileHandler {
         return found;
     }
 
-    // remove trainer with matching ID, rewrite file
+    // DELETE — remove trainer with matching ID, rewrite file
     public boolean deleteTrainer(String trainerId) throws IOException {
         ArrayList<Trainer> all = getAllTrainers();
         boolean found = false;
@@ -105,7 +105,7 @@ public class TrainerFileHandler {
         return found;
     }
 
-    // overwrite entire file with new list
+    // Helper — overwrite entire file with new list
     private void writeAllToFile(ArrayList<Trainer> trainers) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
             for (Trainer t : trainers) {
@@ -115,7 +115,7 @@ public class TrainerFileHandler {
         }
     }
 
-    // generate ID like TRN-1001, TRN-1002
+    // Helper — generate ID like TRN-1001, TRN-1002
     private String generateId() throws IOException {
         int nextNum = 1001 + getAllTrainers().size();
         return String.format("TRN-%d", nextNum);

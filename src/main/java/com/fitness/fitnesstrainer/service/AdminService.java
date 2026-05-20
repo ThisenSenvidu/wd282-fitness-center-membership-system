@@ -7,16 +7,7 @@ import com.fitness.fitnesstrainer.util.AdminFileHandler;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
-/**
- * AdminService.java — Business logic layer for Admin Management.
- *
- * Spring Boot concept:
- *   @Service — Spring manages this as a bean; injected into AdminController
- *
- * OOP concepts:
- *   Encapsulation — hides file-handling details from the controller
- *   Polymorphism  — builds SuperAdmin or RegularAdmin based on adminType
- */
+
 @Service
 public class AdminService {
 
